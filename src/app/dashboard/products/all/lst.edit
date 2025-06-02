@@ -1,0 +1,24 @@
+
+-------------------------------------------------------------
+Documentation for global change
+-------------------------------------------------------------
+-------------------------------------------------------------
+1.Users   /  _1_     / 000     /    _ _ _     /
+-------------------------------------------------------------
+unique-name/unique-id/global-id/global-check/
+-------------------------------------------------------------
+unique-name -> unique name to identify database
+unique-id   -> unique id to change secure
+global-id   -> global id to change secure
+global-check-> checking is all data editing finish or not
+-------------------------------------------------------------
+you have to change
+1. Products -->> Products
+2. products -->> products
+3. Product -->> Product
+4. product -->> product
+5. ISelect -->> ISelect
+6. select -->> select
+
+7. product [file and variable name] -->>  -->> product
+8. tagTypeProducts -->> redux-tag-type -->> tagTypeProducts
