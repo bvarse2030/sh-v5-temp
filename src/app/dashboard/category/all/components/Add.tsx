@@ -15,9 +15,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { useUsers_1_000___Store } from '../store/Store';
-import { useAddUsers_1_000___Mutation } from '../redux/rtk-Api';
-import { defaultUsers_1_000___Data, select_5_000___, ISelect_6_000___, users_2_000___SelectorArr } from '../store/StoreConstants';
+import { useCategory_sStore } from '../store/Store';
+import { useAddCategory_sMutation } from '../redux/rtk-Api';
+import { defaultCategory_sData, select, ISelect, category_sSelectorArr } from '../store/StoreConstants';
 
 import DataSelect from './DataSelect';
 import ImagesSelect from './ImagesSelect';
@@ -41,8 +41,8 @@ const InputField: React.FC<{
 );
 
 const AddNextComponents: React.FC = () => {
-  const { toggleAddModal, isAddModalOpen, newUsers_1_000___, setNewUsers_1_000___, setUsers_1_000___ } = useUsers_1_000___Store();
-  const [addUsers_1_000___, { isLoading }] = useAddUsers_1_000___Mutation();
+  const { toggleAddModal, isAddModalOpen, newCategory_s, setNewCategory_s, setCategory_s } = useCategory_sStore();
+  const [addCategory_s, { isLoading }] = useAddCategory_sMutation();
 
   const [newItemTags, setNewItemTags] = useState<string[]>([]);
   const [newImages, setNewImages] = useState<string[]>([]);
@@ -56,21 +56,21 @@ const AddNextComponents: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNewUsers_1_000___({ ...newUsers_1_000___, [name]: value });
+    setNewCategory_s({ ...newCategory_s, [name]: value });
   };
 
   const handleRoleChange = (value: string) => {
-    setNewUsers_1_000___({ ...newUsers_1_000___, role: value as ISelect_6_000___ });
+    setNewCategory_s({ ...newCategory_s, role: value as ISelect });
   };
 
-  const handleAddUsers_1_000___ = async () => {
-    const Users_2_000___ = {
+  const handleAddCategory_s = async () => {
+    const category_s = {
       dataArr: newItemTags || [],
-      name: newUsers_1_000___.name || '',
-      email: newUsers_1_000___.email || '',
-      passCode: newUsers_1_000___.passCode || '',
-      alias: newUsers_1_000___.alias || '',
-      role: (newUsers_1_000___.role as ISelect_6_000___) || select_5_000___,
+      name: newCategory_s.name || '',
+      email: newCategory_s.email || '',
+      passCode: newCategory_s.passCode || '',
+      alias: newCategory_s.alias || '',
+      role: (newCategory_s.role as ISelect) || select,
       images: newImages || [],
       descriptions: descriptions || '',
       createdAt: new Date(),
@@ -78,10 +78,10 @@ const AddNextComponents: React.FC = () => {
     };
 
     try {
-      const addedUsers_1_000___ = await addUsers_1_000___(Users_2_000___).unwrap(); // Get the returned data
-      setUsers_1_000___([Users_2_000___, addedUsers_1_000___]); // Use the returned data instead of the local `Users_1_000___` object
+      const addedCategory_s = await addCategory_s(category_s).unwrap(); // Get the returned data
+      setCategory_s([category_s, addedCategory_s]); // Use the returned data instead of the local `Category_s` object
       toggleAddModal(false);
-      setNewUsers_1_000___(defaultUsers_1_000___Data);
+      setNewCategory_s(defaultCategory_sData);
       handleSuccess('Added Successful');
     } catch (error: unknown) {
       console.log(error);
@@ -99,32 +99,32 @@ const AddNextComponents: React.FC = () => {
     <Dialog open={isAddModalOpen} onOpenChange={toggleAddModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Users_1_000___</DialogTitle>
+          <DialogTitle>Add New Category_s</DialogTitle>
         </DialogHeader>
 
         <ScrollArea className="h-[400px] w-full rounded-md border p-4">
           <div className="grid gap-4 py-4">
-            <InputField id="name" name="name" label="Name" value={(newUsers_1_000___.name as string) || ''} onChange={handleInputChange} />
-            <InputField id="email" name="email" label="Email" type="email" value={(newUsers_1_000___.email as string) || ''} onChange={handleInputChange} />
+            <InputField id="name" name="name" label="Name" value={(newCategory_s.name as string) || ''} onChange={handleInputChange} />
+            <InputField id="email" name="email" label="Email" type="email" value={(newCategory_s.email as string) || ''} onChange={handleInputChange} />
             <InputField
               id="passCode"
               name="passCode"
               label="Pass Code"
               type="password"
-              value={(newUsers_1_000___.passCode as string) || ''}
+              value={(newCategory_s.passCode as string) || ''}
               onChange={handleInputChange}
             />
-            <InputField id="alias" name="alias" label="Alias" value={(newUsers_1_000___.alias as string) || ''} onChange={handleInputChange} />
+            <InputField id="alias" name="alias" label="Alias" value={(newCategory_s.alias as string) || ''} onChange={handleInputChange} />
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="role" className="text-right">
                 Role
               </Label>
-              <Select onValueChange={handleRoleChange} defaultValue={(newUsers_1_000___.role as string) || ''}>
+              <Select onValueChange={handleRoleChange} defaultValue={(newCategory_s.role as string) || ''}>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
-                  {users_2_000___SelectorArr?.map((i, index) => (
+                  {category_sSelectorArr?.map((i, index) => (
                     <SelectItem key={i + index} className="cursor-pointer" value={i}>
                       {i}
                     </SelectItem>
@@ -147,9 +147,9 @@ const AddNextComponents: React.FC = () => {
             disabled={isLoading}
             variant="outline"
             className="border-slate-500 hover:border-slate-600 border-1 cursor-pointer"
-            onClick={handleAddUsers_1_000___}
+            onClick={handleAddCategory_s}
           >
-            Add Users_1_000___
+            Add Category_s
           </Button>
         </DialogFooter>
       </DialogContent>

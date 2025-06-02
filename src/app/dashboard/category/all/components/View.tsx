@@ -14,28 +14,28 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { IUsers_1_000___ } from '../api/v1/Model';
-import { useUsers_1_000___Store } from '../store/Store';
-import { baseIUsers_1_000___ } from '../store/StoreConstants';
-import { useGetUsers_1_000___ByIdQuery } from '../redux/rtk-Api';
+import { ICategory_s } from '../api/v1/Model';
+import { useCategory_sStore } from '../store/Store';
+import { baseICategory_s } from '../store/StoreConstants';
+import { useGetCategory_sByIdQuery } from '../redux/rtk-Api';
 
 import { ViewRichText } from './view-rich-text/ViewRichText';
 
 const ViewNextComponents: React.FC = () => {
-  const { isViewModalOpen, selectedUsers_1_000___, toggleViewModal, setSelectedUsers_1_000___ } = useUsers_1_000___Store();
-  const { data: Users_1_000___Data, refetch } = useGetUsers_1_000___ByIdQuery(selectedUsers_1_000___?._id, { skip: !selectedUsers_1_000___?._id });
+  const { isViewModalOpen, selectedCategory_s, toggleViewModal, setSelectedCategory_s } = useCategory_sStore();
+  const { data: Category_sData, refetch } = useGetCategory_sByIdQuery(selectedCategory_s?._id, { skip: !selectedCategory_s?._id });
 
   useEffect(() => {
-    if (selectedUsers_1_000___?._id) {
-      refetch(); // Fetch the latest Users_1_000___ data
+    if (selectedCategory_s?._id) {
+      refetch(); // Fetch the latest Category_s data
     }
-  }, [selectedUsers_1_000___?._id, refetch]);
+  }, [selectedCategory_s?._id, refetch]);
 
   useEffect(() => {
-    if (Users_1_000___Data?.data) {
-      setSelectedUsers_1_000___(Users_1_000___Data.data); // Update selectedUsers_1_000___ with the latest data
+    if (Category_sData?.data) {
+      setSelectedCategory_s(Category_sData.data); // Update selectedCategory_s with the latest data
     }
-  }, [Users_1_000___Data, setSelectedUsers_1_000___]);
+  }, [Category_sData, setSelectedCategory_s]);
 
   const formatDate = (date?: Date) => (date ? format(date, 'MMM dd, yyyy') : 'N/A');
 
@@ -56,40 +56,40 @@ const ViewNextComponents: React.FC = () => {
     <Dialog open={isViewModalOpen} onOpenChange={toggleViewModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Users_1_000___ Details</DialogTitle>
+          <DialogTitle>Category_s Details</DialogTitle>
         </DialogHeader>
-        {selectedUsers_1_000___ && (
+        {selectedCategory_s && (
           <ScrollArea className="h-[400px] w-full rounded-md border p-4">
             <div className="w-full flex flex-col">
               <div className="grid gap-2">
-                <DetailRow label="Name" value={selectedUsers_1_000___.name as string} />
-                <DetailRow label="Email" value={selectedUsers_1_000___.email as string} />
-                <DetailRow label="Pass Code" value={selectedUsers_1_000___.passCode as string} />
-                <DetailRow label="Alias" value={selectedUsers_1_000___.alias as string} />
+                <DetailRow label="Name" value={selectedCategory_s.name as string} />
+                <DetailRow label="Email" value={selectedCategory_s.email as string} />
+                <DetailRow label="Pass Code" value={selectedCategory_s.passCode as string} />
+                <DetailRow label="Alias" value={selectedCategory_s.alias as string} />
                 <DetailRow
                   label="Role"
                   value={
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        selectedUsers_1_000___.role === 'admin'
+                        selectedCategory_s.role === 'admin'
                           ? 'bg-amber-100 text-amber-700'
-                          : selectedUsers_1_000___.role === 'moderator'
+                          : selectedCategory_s.role === 'moderator'
                           ? 'bg-blue-100 text-blue-700'
                           : 'bg-green-100 text-green-700'
                       }`}
                     >
-                      {selectedUsers_1_000___.role as string}
+                      {selectedCategory_s.role as string}
                     </span>
                   }
                 />
-                <DetailRowArray label="Data Array" values={selectedUsers_1_000___.dataArr as string[]} />
-                <DetailRow label="Created At" value={formatDate(selectedUsers_1_000___.createdAt)} />
-                <DetailRow label="Updated At" value={formatDate(selectedUsers_1_000___.updatedAt)} />
+                <DetailRowArray label="Data Array" values={selectedCategory_s.dataArr as string[]} />
+                <DetailRow label="Created At" value={formatDate(selectedCategory_s.createdAt)} />
+                <DetailRow label="Updated At" value={formatDate(selectedCategory_s.updatedAt)} />
               </div>
               <div className="w-full flex items-center justify-center mt-2 min-h-[10vh]">
-                {Array.isArray(selectedUsers_1_000___.images) && selectedUsers_1_000___.images?.length > 0 ? (
+                {Array.isArray(selectedCategory_s.images) && selectedCategory_s.images?.length > 0 ? (
                   <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-1">
-                    {selectedUsers_1_000___.images.map((i, index) => (
+                    {selectedCategory_s.images.map((i, index) => (
                       <div
                         key={index + i}
                         className={`relative w-full h-[150px] border-1 border-slate-300 shadow-xl hover:shadow-2xl cursor-pointer hover:border-slate-600 flex items-center justify-center rounded-lg overflow-hidden`}
@@ -105,7 +105,7 @@ const ViewNextComponents: React.FC = () => {
                 )}
               </div>
               <div className="w-full m-2" />
-              <ViewRichText data={selectedUsers_1_000___.descriptions || ''} />
+              <ViewRichText data={selectedCategory_s.descriptions || ''} />
             </div>
           </ScrollArea>
         )}
@@ -114,7 +114,7 @@ const ViewNextComponents: React.FC = () => {
             className="cursor-pointer border-1 border-slate-400 hover:border-slate-500"
             onClick={() => {
               toggleViewModal(false);
-              setSelectedUsers_1_000___({ ...baseIUsers_1_000___ } as IUsers_1_000___);
+              setSelectedCategory_s({ ...baseICategory_s } as ICategory_s);
             }}
           >
             Close

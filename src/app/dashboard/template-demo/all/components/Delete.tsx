@@ -11,35 +11,35 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { IUsers_1_000___ } from '../api/v1/Model';
-import { useUsers_1_000___Store } from '../store/Store';
-import { baseIUsers_1_000___ } from '../store/StoreConstants';
-import { useDeleteUsers_1_000___Mutation } from '../redux/rtk-Api';
+import { ICategory_s } from '../api/v1/Model';
+import { useCategory_sStore } from '../store/Store';
+import { baseICategory_s } from '../store/StoreConstants';
+import { useDeleteCategory_sMutation } from '../redux/rtk-Api';
 
 import { handleSuccess } from './utils';
 
 const DeleteNextComponents: React.FC = () => {
-  const { toggleDeleteModal, isDeleteModalOpen, selectedUsers_1_000___, setSelectedUsers_1_000___ } = useUsers_1_000___Store();
-  const [deleteUsers_1_000___] = useDeleteUsers_1_000___Mutation();
+  const { toggleDeleteModal, isDeleteModalOpen, selectedCategory_s, setSelectedCategory_s } = useCategory_sStore();
+  const [deleteCategory_s] = useDeleteCategory_sMutation();
 
-  const handleDeleteUsers_1_000___ = async () => {
-    if (selectedUsers_1_000___) {
+  const handleDeleteCategory_s = async () => {
+    if (selectedCategory_s) {
       try {
-        await deleteUsers_1_000___({ id: selectedUsers_1_000___._id }).unwrap();
+        await deleteCategory_s({ id: selectedCategory_s._id }).unwrap();
         toggleDeleteModal(false);
         handleSuccess('Delete Successful');
       } catch (error) {
-        console.error('Failed to delete Users_1_000___:', error);
+        console.error('Failed to delete Category_s:', error);
       }
     }
   };
 
   const handleCancel = () => {
     toggleDeleteModal(false);
-    setSelectedUsers_1_000___({ ...baseIUsers_1_000___ } as IUsers_1_000___);
+    setSelectedCategory_s({ ...baseICategory_s } as ICategory_s);
   };
 
-  const { name = '' } = selectedUsers_1_000___ || {};
+  const { name = '' } = selectedCategory_s || {};
 
   return (
     <Dialog open={isDeleteModalOpen} onOpenChange={toggleDeleteModal}>
@@ -47,10 +47,10 @@ const DeleteNextComponents: React.FC = () => {
         <DialogHeader>
           <DialogTitle>Confirm Deletion</DialogTitle>
         </DialogHeader>
-        {selectedUsers_1_000___ && (
+        {selectedCategory_s && (
           <div className="py-4">
             <p>
-              You are about to delete Users_1_000___: <span className="font-semibold">{(name as string) || ''}</span>
+              You are about to delete Category_s: <span className="font-semibold">{(name as string) || ''}</span>
             </p>
           </div>
         )}
@@ -61,7 +61,7 @@ const DeleteNextComponents: React.FC = () => {
           <Button
             className="text-rose-400 hover:text-rose-500 cursor-pointer bg-rose-100 hover:bg-rose-200 border-1 border-rose-300 hover:border-rose-400 "
             variant="outline"
-            onClick={handleDeleteUsers_1_000___}
+            onClick={handleDeleteCategory_s}
           >
             Delete
           </Button>

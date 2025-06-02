@@ -39,8 +39,8 @@ const getDataById = async (id: string): Promise<ApiResponse> => {
   } catch (error) {
     console.error('Failed to fetch Data:', error);
     return {
-      data: { name: 'User_3_000___', _id: '' },
-      message: 'User_3_000___ fetched successfully',
+      data: { name: 'Category', _id: '' },
+      message: 'Category fetched successfully',
       status: 200,
     };
   }

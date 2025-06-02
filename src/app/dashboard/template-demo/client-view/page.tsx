@@ -32,7 +32,7 @@ const Page = () => {
         });
 
         const responseData = await response.json();
-        setData(responseData?.data?.users_2_000___);
+        setData(responseData?.data?.category_s);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }

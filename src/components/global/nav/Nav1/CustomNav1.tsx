@@ -17,7 +17,7 @@ const CustomNav1 = () => {
     { name: 'Home', url: '/' },
     { name: 'Media', url: '/dashboard/media' },
     { name: 'T-demo', url: '/dashboard/template-demo/all' },
-    { name: 'RTK', url: '/dashboard/a__1_1001_users__/all' },
+    { name: 'RTK', url: '/dashboard/category/all' },
     { name: 'Login', url: '/login' },
     { name: 'Auth', url: '/auth' },
     { name: 'Dashboard', url: '/dashboard' },

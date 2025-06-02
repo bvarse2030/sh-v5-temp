@@ -1,15 +1,15 @@
 import { create } from 'zustand';
-import { IUsers_1_000___ } from '../api/v1/Model';
-import { Users_1_000___Store } from './StoreTypes';
-import { baseIUsers_1_000___, queryParams } from './StoreConstants';
+import { ICategory_s } from '../api/v1/Model';
+import { Category_sStore } from './StoreTypes';
+import { baseICategory_s, queryParams } from './StoreConstants';
 
-export const useUsers_1_000___Store = create<Users_1_000___Store>(set => ({
+export const useCategory_sStore = create<Category_sStore>(set => ({
   queryPramsLimit: queryParams.limit,
   queryPramsPage: queryParams.page,
   queryPramsQ: queryParams.q,
-  users_2_000___: [],
-  selectedUsers_1_000___: null,
-  newUsers_1_000___: baseIUsers_1_000___,
+  category_s: [],
+  selectedCategory_s: null,
+  newCategory_s: baseICategory_s,
   isBulkEditModalOpen: false,
   isBulkDynamicUpdateModal: false,
   isBulkUpdateModalOpen: false,
@@ -22,12 +22,12 @@ export const useUsers_1_000___Store = create<Users_1_000___Store>(set => ({
   setQueryPramsLimit: (payload: number) => set({ queryPramsLimit: payload }),
   setQueryPramsPage: (payload: number) => set({ queryPramsPage: payload }),
   setQueryPramsQ: (payload: string) => set({ queryPramsQ: payload }),
-  setBulkData: (bulkData: IUsers_1_000___[]) => set({ bulkData }),
-  setUsers_1_000___: (users_2_000___: IUsers_1_000___[]) => set({ users_2_000___ }),
-  setSelectedUsers_1_000___: Users_1_000___ => set({ selectedUsers_1_000___: Users_1_000___ }),
-  setNewUsers_1_000___: Users_1_000___ =>
+  setBulkData: (bulkData: ICategory_s[]) => set({ bulkData }),
+  setCategory_s: (category_s: ICategory_s[]) => set({ category_s }),
+  setSelectedCategory_s: Category_s => set({ selectedCategory_s: Category_s }),
+  setNewCategory_s: Category_s =>
     set(state => ({
-      newUsers_1_000___: typeof Users_1_000___ === 'function' ? Users_1_000___(state.newUsers_1_000___) : Users_1_000___,
+      newCategory_s: typeof Category_s === 'function' ? Category_s(state.newCategory_s) : Category_s,
     })),
   toggleAddModal: data => set({ isAddModalOpen: data }),
   toggleViewModal: data => set({ isViewModalOpen: data }),

@@ -9,9 +9,9 @@
 import { apiSlice } from '@/redux/api/apiSlice';
 
 // Use absolute paths with leading slash to ensure consistent behavior
-export const users_2_000___Api = apiSlice.injectEndpoints({
+export const category_sApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    getUsers_1_000___: builder.query({
+    getCategory_s: builder.query({
       query: ({ page, limit, q }) => {
         let url = `/dashboard/template-demo/all/api/v1?page=${page || 1}&limit=${limit || 10}`;
         if (q) {
@@ -19,60 +19,60 @@ export const users_2_000___Api = apiSlice.injectEndpoints({
         }
         return url;
       },
-      providesTags: [{ type: 'tagTypeUsers_1_000___', id: 'LIST' }],
+      providesTags: [{ type: 'tagTypeCategory', id: 'LIST' }],
     }),
-    getUsers_1_000___ById: builder.query({
+    getCategory_sById: builder.query({
       query: id => `/dashboard/template-demo/all/api/v1?id=${id}`,
     }),
-    addUsers_1_000___: builder.mutation({
-      query: newUsers_1_000___ => ({
+    addCategory_s: builder.mutation({
+      query: newCategory_s => ({
         url: '/dashboard/template-demo/all/api/v1',
         method: 'POST',
-        body: newUsers_1_000___,
+        body: newCategory_s,
       }),
-      invalidatesTags: [{ type: 'tagTypeUsers_1_000___' }],
+      invalidatesTags: [{ type: 'tagTypeCategory' }],
     }),
-    updateUsers_1_000___: builder.mutation({
+    updateCategory_s: builder.mutation({
       query: ({ id, ...data }) => ({
         url: `/dashboard/template-demo/all/api/v1`,
         method: 'PUT',
         body: { id: id, ...data },
       }),
-      invalidatesTags: [{ type: 'tagTypeUsers_1_000___' }],
+      invalidatesTags: [{ type: 'tagTypeCategory' }],
     }),
-    deleteUsers_1_000___: builder.mutation({
+    deleteCategory_s: builder.mutation({
       query: ({ id }) => ({
         url: `/dashboard/template-demo/all/api/v1`,
         method: 'DELETE',
         body: { id },
       }),
-      invalidatesTags: [{ type: 'tagTypeUsers_1_000___' }],
+      invalidatesTags: [{ type: 'tagTypeCategory' }],
     }),
-    bulkUpdateUsers_1_000___: builder.mutation({
+    bulkUpdateCategory_s: builder.mutation({
       query: bulkData => ({
         url: `/dashboard/template-demo/all/api/v1?bulk=true`,
         method: 'PUT',
         body: bulkData,
       }),
-      invalidatesTags: [{ type: 'tagTypeUsers_1_000___' }],
+      invalidatesTags: [{ type: 'tagTypeCategory' }],
     }),
-    bulkDeleteUsers_1_000___: builder.mutation({
+    bulkDeleteCategory_s: builder.mutation({
       query: bulkData => ({
         url: `/dashboard/template-demo/all/api/v1?bulk=true`,
         method: 'DELETE',
         body: bulkData,
       }),
-      invalidatesTags: [{ type: 'tagTypeUsers_1_000___' }],
+      invalidatesTags: [{ type: 'tagTypeCategory' }],
     }),
   }),
 });
 
 export const {
-  useGetUsers_1_000___Query,
-  useAddUsers_1_000___Mutation,
-  useUpdateUsers_1_000___Mutation,
-  useDeleteUsers_1_000___Mutation,
-  useBulkUpdateUsers_1_000___Mutation,
-  useBulkDeleteUsers_1_000___Mutation,
-  useGetUsers_1_000___ByIdQuery,
-} = users_2_000___Api;
+  useGetCategory_sQuery,
+  useAddCategory_sMutation,
+  useUpdateCategory_sMutation,
+  useDeleteCategory_sMutation,
+  useBulkUpdateCategory_sMutation,
+  useBulkDeleteCategory_sMutation,
+  useGetCategory_sByIdQuery,
+} = category_sApi;

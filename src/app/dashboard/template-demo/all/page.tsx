@@ -22,23 +22,23 @@ import ViewFilename8 from './components/View';
 import SearchBox from './components/SearchBox';
 import DeleteFilename8 from './components/Delete';
 import BulkEditFilename8 from './components/BulkEdit';
-import { useUsers_1_000___Store } from './store/Store';
+import { useCategory_sStore } from './store/Store';
 import TooManyRequests from './components/TooManyRequest';
 import BulkDeleteFilename8 from './components/BulkDelete';
-import { useGetUsers_1_000___Query } from './redux/rtk-Api';
-import ViewUsers_1_000___Table from './components/ViewTable';
-import BulkUpdateUsers_1_000___ from './components/BulkUpdate';
-import BulkDynamicUpdateUsers_1_000___ from './components/BulkDynamicUpdate';
+import { useGetCategory_sQuery } from './redux/rtk-Api';
+import ViewCategory_sTable from './components/ViewTable';
+import BulkUpdateCategory_s from './components/BulkUpdate';
+import BulkDynamicUpdateCategory_s from './components/BulkDynamicUpdate';
 
 const MainNextPage: React.FC = () => {
   const [hashSearchText, setHashSearchText] = useState('');
-  const { toggleAddModal, queryPramsLimit, queryPramsPage, queryPramsQ, setQueryPramsPage, setQueryPramsQ } = useUsers_1_000___Store();
+  const { toggleAddModal, queryPramsLimit, queryPramsPage, queryPramsQ, setQueryPramsPage, setQueryPramsQ } = useCategory_sStore();
 
   const {
     data: getResponseData,
     isSuccess,
     status: statusCode,
-  } = useGetUsers_1_000___Query(
+  } = useGetCategory_sQuery(
     { q: queryPramsQ, page: queryPramsPage, limit: queryPramsLimit },
     {
       selectFromResult: ({ data, isSuccess, status, error }) => ({
@@ -65,15 +65,15 @@ const MainNextPage: React.FC = () => {
     BulkEditFilename8,
     EditFilename8,
     DeleteFilename8,
-    BulkUpdateUsers_1_000___,
-    BulkDynamicUpdateUsers_1_000___,
+    BulkUpdateCategory_s,
+    BulkDynamicUpdateCategory_s,
   ];
   const router = useRouter();
 
   let renderUI = (
     <div className="container mx-auto p-4">
       <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-6">
-        <h1 className="h2 w-full">User_3_000___ Management {isSuccess && <sup className="text-xs">(total:{getResponseData?.data?.total || '00'})</sup>}</h1>
+        <h1 className="h2 w-full">Category Management {isSuccess && <sup className="text-xs">(total:{getResponseData?.data?.total || '00'})</sup>}</h1>
         <div className="w-full flex flex-col md:flex-row gap-2 item-center justify-end">
           <Button size="sm" variant="outlineGarden" onClick={() => router.push('/dashboard/template-demo/ssr-view')}>
             <BiRightArrowAlt className="w-4 h-4" />
@@ -85,12 +85,12 @@ const MainNextPage: React.FC = () => {
           </Button>
           <Button size="sm" variant="outlineGarden" onClick={() => toggleAddModal(true)}>
             <PlusIcon className="w-4 h-4" />
-            Add User_3_000___
+            Add Category
           </Button>
         </div>
       </div>
       <SearchBox onSearch={handleSearch} placeholder="Search here ..." autoFocus={false} />
-      <ViewUsers_1_000___Table />
+      <ViewCategory_sTable />
       {modals.map((ModalComponent, index) => (
         <ModalComponent key={index} />
       ))}

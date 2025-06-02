@@ -1,21 +1,21 @@
-import { IUsers_1_000___ } from '../api/v1/Model';
+import { ICategory_s } from '../api/v1/Model';
 
-export const baseIUsers_1_000___PerPage = 2;
-export const queryParams = { q: '', page: 1, limit: baseIUsers_1_000___PerPage };
-export const pageLimitArr: number[] = [baseIUsers_1_000___PerPage, 10, 50, 100, 200];
-export const select_5_000___: string = 'select_5_000___';
-export const users_2_000___SelectorArr = [select_5_000___, 'admin', 'moderator'];
-export type ISelect_6_000___ = 'select_5_000___' | 'admin' | 'moderator';
-export const defaultUsers_1_000___Data: IUsers_1_000___ = {
+export const baseICategory_sPerPage = 2;
+export const queryParams = { q: '', page: 1, limit: baseICategory_sPerPage };
+export const pageLimitArr: number[] = [baseICategory_sPerPage, 10, 50, 100, 200];
+export const select: string = 'select';
+export const category_sSelectorArr = [select, 'admin', 'moderator'];
+export type ISelect = 'select' | 'admin' | 'moderator';
+export const defaultCategory_sData: ICategory_s = {
   _id: '',
   name: '',
   email: '',
   passCode: '',
   alias: '',
-  role: select_5_000___,
+  role: select,
   createdAt: new Date(),
   updatedAt: new Date(),
 };
-export const baseIUsers_1_000___: IUsers_1_000___ = {
-  ...defaultUsers_1_000___Data,
+export const baseICategory_s: ICategory_s = {
+  ...defaultCategory_sData,
 };

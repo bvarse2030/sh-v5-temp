@@ -7,9 +7,9 @@
 */
 
 import mongoose, { Schema } from 'mongoose';
-import { users_2_000___SelectorArr, select_5_000___ } from '../../store/StoreConstants';
+import { category_sSelectorArr, select } from '../../store/StoreConstants';
 
-const user_4_000___Schema = new Schema(
+const categorySchema = new Schema(
   {
     name: { type: String, required: true },
     dataArr: [{ type: String, required: false }],
@@ -23,8 +23,8 @@ const user_4_000___Schema = new Schema(
     alias: { type: String, required: true },
     role: {
       type: String,
-      enum: users_2_000___SelectorArr,
-      default: select_5_000___,
+      enum: category_sSelectorArr,
+      default: select,
     },
     images: [{ type: String }],
     descriptions: { type: String },
@@ -32,9 +32,9 @@ const user_4_000___Schema = new Schema(
   { timestamps: true },
 );
 
-export default mongoose.models.User_3_000___ || mongoose.model('User_3_000___', user_4_000___Schema);
+export default mongoose.models.Category || mongoose.model('Category', categorySchema);
 
-export interface IUsers_1_000___ {
+export interface ICategory_s {
   name: string;
   dataArr?: string[];
   email: string;
