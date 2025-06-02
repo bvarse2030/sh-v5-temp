@@ -125,9 +125,9 @@ const EditNextComponents: React.FC = () => {
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-50">
+                <SelectContent>
                   {users_2_000___SelectorArr?.map((i, index) => (
-                    <SelectItem key={i + index} className="cursor-pointer hover:bg-slate-200" value={i}>
+                    <SelectItem key={i + index} className="cursor-pointer " value={i}>
                       {i}
                     </SelectItem>
                   ))}
@@ -144,7 +144,6 @@ const EditNextComponents: React.FC = () => {
         </ScrollArea>
         <DialogFooter>
           <Button
-            className="cursor-pointer border-1 border-slate-400 hover:border-slate-500"
             variant="outline"
             onClick={() => {
               toggleEditModal(false);
@@ -153,10 +152,7 @@ const EditNextComponents: React.FC = () => {
           >
             Cancel
           </Button>
-          <Button
-            onClick={handleEditNextComponents}
-            className="text-green-400 hover:text-green-500 cursor-pointer bg-green-100 hover:bg-green-200 border-1 border-green-300 hover:border-green-400"
-          >
+          <Button onClick={handleEditNextComponents} variant="outlineGarden">
             Save Changes
           </Button>
         </DialogFooter>

@@ -54,7 +54,7 @@ export default function ImagesSelect({ newImages, setNewImages }: ImagesSelectPr
         <UploadButton />
       </div>
       <div className="w-full min-h-[10vh] rounded-lg flex items-center justify-center">
-        {newImages.length > 0 ? (
+        {newImages?.length > 0 ? (
           <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-1">
             {newImages.map((i, index) => (
               <div

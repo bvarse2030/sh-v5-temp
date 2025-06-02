@@ -90,10 +90,9 @@ const ViewTableNextComponents: React.FC = () => {
     handleSuccess('Reload Successful');
   };
   const renderActions = (Users_1_000___: IUsers_1_000___) => (
-    <div className="flex flex-col sm:flex-row gap-2">
+    <div className="flex gap-2">
       <Button
-        className="cursor-pointer "
-        variant="outline"
+        variant="outlineDefault"
         size="sm"
         onClick={() => {
           setSelectedUsers_1_000___(Users_1_000___);
@@ -103,8 +102,7 @@ const ViewTableNextComponents: React.FC = () => {
         <EyeIcon className="w-4 h-4 mr-1" /> View
       </Button>
       <Button
-        className="cursor-pointer "
-        variant="outline"
+        variant="outlineDefault"
         size="sm"
         onClick={() => {
           setSelectedUsers_1_000___(Users_1_000___);
@@ -114,9 +112,8 @@ const ViewTableNextComponents: React.FC = () => {
         <PencilIcon className="w-4 h-4 mr-1" /> Edit
       </Button>
       <Button
-        variant="outline"
+        variant="outlineGarden"
         size="sm"
-        className="text-rose-400 hover:text-rose-500 cursor-pointer bg-rose-100 hover:bg-rose-200 border-1 border-rose-300 hover:border-rose-400 "
         onClick={() => {
           setSelectedUsers_1_000___(Users_1_000___);
           toggleDeleteModal(true);
@@ -136,13 +133,13 @@ const ViewTableNextComponents: React.FC = () => {
           />
         </TableCell>
         <TableCell className="font-medium">{(Users_1_000___.name as string) || ''}</TableCell>
-        <TableCell className="hidden md:table-cell">{(Users_1_000___.email as string) || ''}</TableCell>
-        <TableCell className="hidden lg:table-cell">{(Users_1_000___.passCode as string) || ''}</TableCell>
-        <TableCell className="hidden md:table-cell">{(Users_1_000___.alias as string) || ''}</TableCell>
+        <TableCell>{(Users_1_000___.email as string) || ''}</TableCell>
+        <TableCell>{(Users_1_000___.passCode as string) || ''}</TableCell>
+        <TableCell>{(Users_1_000___.alias as string) || ''}</TableCell>
         <TableCell>
           <span className={`py-1 rounded-full text-xs font-medium bg-green-500 text-green-50 px-3`}>{(Users_1_000___.role as string) || ''}</span>
         </TableCell>
-        <TableCell className="hidden lg:table-cell">{formatDate(Users_1_000___.createdAt)}</TableCell>
+        <TableCell>{formatDate(Users_1_000___.createdAt)}</TableCell>
         <TableCell className="justify-end flex">{renderActions(Users_1_000___)}</TableCell>
       </TableRow>
     ));
@@ -154,27 +151,21 @@ const ViewTableNextComponents: React.FC = () => {
   return (
     <div className="w-full flex flex-col">
       <div className="w-full my-4">
-        <div className="w-full flex items-center justify-between gap-4 pb-2 border-b-1 border-slat-400">
+        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 pb-2 border-b-1 border-slat-400">
           <div className="px-2 gap-2 flex items-center justify-start w-full">
             Total Selected <span className="text-xs text-slate-500">({bulkData.length})</span>
           </div>
           <div className="px-2 gap-2 flex items-center justify-end w-full">
-            <Button className="cursor-pointer " variant="outline" size="sm" onClick={() => toggleBulkDynamicUpdateModal(true)} disabled={bulkData.length === 0}>
+            <Button variant="outlineDefault" size="sm" onClick={() => toggleBulkDynamicUpdateModal(true)} disabled={bulkData.length === 0}>
               <PencilIcon className="w-4 h-4 mr-1" /> B. Update
             </Button>
-            <Button className="cursor-pointer " variant="outline" size="sm" onClick={() => toggleBulkUpdateModal(true)} disabled={bulkData.length === 0}>
+            <Button variant="outlineDefault" size="sm" onClick={() => toggleBulkUpdateModal(true)} disabled={bulkData.length === 0}>
               <PencilIcon className="w-4 h-4 mr-1" /> B. Update
             </Button>
-            <Button className="cursor-pointer " variant="outline" size="sm" onClick={() => toggleBulkEditModal(true)} disabled={bulkData.length === 0}>
+            <Button variant="outlineDefault" size="sm" onClick={() => toggleBulkEditModal(true)} disabled={bulkData.length === 0}>
               <PencilIcon className="w-4 h-4 mr-1" /> Edit
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-rose-400 hover:text-rose-500 cursor-pointer bg-rose-100 hover:bg-rose-200 border-1 border-rose-300 hover:border-rose-400 "
-              onClick={() => toggleBulkDeleteModal(true)}
-              disabled={bulkData.length === 0}
-            >
+            <Button variant="outlineFire" size="sm" onClick={() => toggleBulkDeleteModal(true)} disabled={bulkData.length === 0}>
               <TrashIcon className="w-4 h-4 mr-1" /> Delete
             </Button>
             <Button
@@ -199,17 +190,11 @@ const ViewTableNextComponents: React.FC = () => {
               <Checkbox onCheckedChange={checked => handleSelectAll(!!checked)} checked={bulkData.length === getAllUsers_1_000___Data.length} />
             </TableHead>
             {['name', 'email', 'passCode', 'alias', 'role', 'createdAt'].map(key => (
-              <TableHead
-                key={key}
-                className={`font-bold text-slate-50 cursor-pointer ${key === 'email' || key === 'alias' ? 'hidden md:table-cell' : ''} ${
-                  key === 'passCode' || key === 'createdAt' ? 'hidden lg:table-cell' : ''
-                }`}
-                onClick={() => handleSort(key as keyof IUsers_1_000___)}
-              >
+              <TableHead key={key} className={`font-bold text-slate-50 cursor-pointer`} onClick={() => handleSort(key as keyof IUsers_1_000___)}>
                 {key.charAt(0).toUpperCase() + key.slice(1)} {sortConfig?.key === key && (sortConfig.direction === 'asc' ? '↑' : '↓')}
               </TableHead>
             ))}
-            <TableHead className="hidden lg:table-cell font-bold text-slate-50 text-end pr-4">Actions</TableHead>
+            <TableHead className="table-cell font-bold text-slate-50 text-end pr-4">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>{renderTableRows()}</TableBody>
@@ -221,7 +206,7 @@ const ViewTableNextComponents: React.FC = () => {
         totalItems={getResponseData?.data?.total}
       />
       <div className="max-w-[380px] flex items-center justify-between pl-2 gap-4 border-1 border-slate-200 rounded-xl w-full mx-auto mt-8">
-        <Label htmlFor="set-limit" className="text-right text-slate-500 font-thin pl-2">
+        <Label htmlFor="set-limit" className="text-right text-slate-500 font-thin pl-3">
           Users_1_000___ per page
         </Label>
         <Select
@@ -234,9 +219,13 @@ const ViewTableNextComponents: React.FC = () => {
           <SelectTrigger className="col-span-4">
             <SelectValue placeholder="Select a limit" />
           </SelectTrigger>
-          <SelectContent className="bg-slate-50">
+          <SelectContent>
             {pageLimitArr.map(i => (
-              <SelectItem key={i} value={i.toString()} className="cursor-pointer hover:bg-slate-200">
+              <SelectItem
+                key={i}
+                value={i.toString()}
+                className="focus:bg-slate-200 hover:bg-slate-300 dark:focus:bg-slate-500 dark:hover:bg-slate-600 cursor-pointer"
+              >
                 {i}
               </SelectItem>
             ))}

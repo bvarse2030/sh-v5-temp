@@ -89,9 +89,9 @@ const ImageDialog = ({ handleAddImages }: { handleAddImages: (newImage: string) 
   return (
     <ScrollArea className="w-full h-[60vh] p-1 pr-2 border-1 border-slate-500">
       <main className="w-full min-h-[60vh] flex flex-col">
-        <div className="flex justify-between items-center border-b border-slate-200 mb-2">
+        <div className="flex justify-between items-center border-b border-slate-200 mb-2 p-2">
           <h1 className="text-xl w-full">Not here! Upload a new one</h1>
-          <Button className="border-slate-500 hover:border-slate-600 border-1 cursor-pointer" onClick={() => setShowUploadModal(true)}>
+          <Button variant="outlineGarden" size="sm" onClick={() => setShowUploadModal(true)}>
             Upload
           </Button>
         </div>
@@ -111,7 +111,7 @@ const ImageDialog = ({ handleAddImages }: { handleAddImages: (newImage: string) 
         ) : (
           <div>
             {allImages.length > 0 ? (
-              <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-1">
+              <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-2 p-1">
                 {allImages.map((i, index) => (
                   <div
                     onClick={() => handleSelect(i)}

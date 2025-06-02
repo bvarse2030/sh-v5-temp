@@ -19,7 +19,6 @@ import { useUsers_1_000___Store } from '../store/Store';
 import { useAddUsers_1_000___Mutation } from '../redux/rtk-Api';
 import { defaultUsers_1_000___Data, select_5_000___, ISelect_6_000___, users_2_000___SelectorArr } from '../store/StoreConstants';
 
-
 import DataSelect from './DataSelect';
 import ImagesSelect from './ImagesSelect';
 import RichTextEditor from './rich-text-editor';
@@ -124,9 +123,9 @@ const AddNextComponents: React.FC = () => {
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-50">
+                <SelectContent>
                   {users_2_000___SelectorArr?.map((i, index) => (
-                    <SelectItem key={i + index} className="cursor-pointer hover:bg-slate-200" value={i}>
+                    <SelectItem key={i + index} className="cursor-pointer" value={i}>
                       {i}
                     </SelectItem>
                   ))}

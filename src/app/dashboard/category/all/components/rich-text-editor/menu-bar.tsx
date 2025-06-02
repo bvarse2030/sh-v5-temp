@@ -110,13 +110,13 @@ export default function MenuBar({ editor }: { editor: Editor | null }) {
   ];
 
   return (
-    <div className="border rounded-md p-1 mb-1 bg-slate-50 space-x-2 z-50">
+    <div className="border rounded-md p-1 mb-1 space-x-2 z-50 space-y-1">
       {Options.map((option, index) => (
         <Toggle
           key={index}
           pressed={option.preesed}
           onPressedChange={option.onClick}
-          className={` border-1 rounded-md cursor-pointer  ${option.preesed ? 'border-slate-500' : 'border-slate-50'}`}
+          className={` border-1 rounded-md cursor-pointer ${option.preesed ? 'border-slate-500' : 'border-slate-50'}`}
         >
           {option.icon}
         </Toggle>

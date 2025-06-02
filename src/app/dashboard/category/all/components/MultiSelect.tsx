@@ -116,7 +116,7 @@ const MultiSelect = ({
             <SelectTrigger className="w-full">
               <SelectValue placeholder={placeholder || 'Please select an option'} />
             </SelectTrigger>
-            <SelectContent className="bg-slate-50 max-h-60">
+            <SelectContent>
               <SelectGroup>
                 {isLoading ? (
                   <SelectLabel className="p-2 text-center text-gray-500">Loading options...</SelectLabel>
@@ -126,7 +126,7 @@ const MultiSelect = ({
                   <SelectLabel className="p-2 text-center text-gray-500">No options available</SelectLabel>
                 ) : (
                   getAvailableOptions().map((item, index) => (
-                    <SelectItem key={`${item}-${index}`} className="cursor-pointer hover:bg-slate-200" value={item}>
+                    <SelectItem key={`${item}-${index}`} className="cursor-pointer" value={item}>
                       {item}
                     </SelectItem>
                   ))

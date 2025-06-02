@@ -1,5 +1,6 @@
 'use client';
 
+import { Input } from '@/components/ui/input';
 import { Search, X } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
@@ -65,14 +66,14 @@ export default function SearchBox({ onSearch, placeholder = 'Search...', autoFoc
   return (
     <div className="relative w-full">
       <div className="relative flex items-center">
-        <input
+        <Input
+          className="pl-10"
           ref={inputRef}
           type="text"
           value={query}
           onChange={e => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="w-full py-2 pl-10 pr-10 text-gray-700 bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <Search size={18} className="text-gray-400" />
