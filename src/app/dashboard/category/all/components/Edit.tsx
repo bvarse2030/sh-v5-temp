@@ -44,7 +44,7 @@ const EditNextComponents: React.FC = () => {
     if (!selectedCategory_s) return;
 
     try {
-      const updateData = { ...newCategory_s };
+      const updateData = { ...newCategory_s, subCategory: subItems };
       await updateCategory_s({ id: selectedCategory_s._id, ...updateData }).unwrap(); // Call RTK mutation
       toggleEditModal(false);
       handleSuccess('Edit Successful');
