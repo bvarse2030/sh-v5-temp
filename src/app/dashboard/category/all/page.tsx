@@ -21,13 +21,11 @@ import EditFilename8 from './components/Edit';
 import ViewFilename8 from './components/View';
 import SearchBox from './components/SearchBox';
 import DeleteFilename8 from './components/Delete';
-import BulkEditFilename8 from './components/BulkEdit';
 import { useCategory_sStore } from './store/Store';
 import TooManyRequests from './components/TooManyRequest';
 import BulkDeleteFilename8 from './components/BulkDelete';
 import { useGetCategory_sQuery } from './redux/rtk-Api';
 import ViewCategory_sTable from './components/ViewTable';
-import BulkUpdateCategory_s from './components/BulkUpdate';
 import BulkDynamicUpdateCategory_s from './components/BulkDynamicUpdate';
 
 const MainNextPage: React.FC = () => {
@@ -58,16 +56,7 @@ const MainNextPage: React.FC = () => {
     }
   };
 
-  const modals = [
-    AddFilename8,
-    ViewFilename8,
-    BulkDeleteFilename8,
-    BulkEditFilename8,
-    EditFilename8,
-    DeleteFilename8,
-    BulkUpdateCategory_s,
-    BulkDynamicUpdateCategory_s,
-  ];
+  const modals = [AddFilename8, ViewFilename8, BulkDeleteFilename8, EditFilename8, DeleteFilename8, BulkDynamicUpdateCategory_s];
   const router = useRouter();
 
   let renderUI = (

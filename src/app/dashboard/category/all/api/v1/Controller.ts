@@ -66,11 +66,7 @@ export async function getCategory_s(req: Request) {
       // Apply search filter only if search query is provided
       if (searchQuery) {
         searchFilter = {
-          $or: [
-            { name: { $regex: searchQuery, $options: 'i' } },
-            { email: { $regex: searchQuery, $options: 'i' } },
-            { alias: { $regex: searchQuery, $options: 'i' } },
-          ],
+          $or: [{ name: { $regex: searchQuery, $options: 'i' }, subCategory: { $regex: searchQuery, $options: 'i' } }],
         };
       }
 
