@@ -25,18 +25,10 @@ export async function createProduct(req: Request): Promise<IResponse> {
     try {
       const productData: Partial<IProduct> = await req.json();
 
-      if (
-        !productData.productUID ||
-        !productData.name ||
-        !productData.description ||
-        !productData.image ||
-        productData.realPrice == null ||
-        productData.discountPrice == null ||
-        !productData.category
-      ) {
+      if (!productData.productUID) {
         return formatResponse(null, 'Missing required product fields', 400);
       }
-
+      console.log('productData', productData);
       const newProduct = await ProductModel.create(productData);
       return formatResponse(newProduct.toObject(), 'Product created successfully', 201);
     } catch (error: unknown) {

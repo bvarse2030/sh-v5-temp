@@ -50,16 +50,6 @@ const AddProductModal: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
     setFormData(prev => {
-      if (name.startsWith('image.')) {
-        const imageField = name.split('.')[1] as keyof IProduct['image'];
-        return {
-          ...prev,
-          image: {
-            ...prev.image,
-            [imageField]: value,
-          },
-        };
-      }
       return {
         ...prev,
         [name]: type === 'number' ? (value === '' ? '' : parseFloat(value)) : value,
@@ -76,13 +66,22 @@ const AddProductModal: React.FC = () => {
   };
 
   const handleAddProduct = async () => {
-    const productPayload: Partial<IProduct> = {
+    const productPayload: IProduct = {
       ...formData,
       realPrice: Number(formData.realPrice),
       discountPrice: Number(formData.discountPrice),
       totalSells: Number(formData.totalSells || 0),
     };
-
+    if (productPayload._id || productPayload._id === '') {
+      delete productPayload._id;
+    }
+    if (productPayload.createdAt) {
+      delete productPayload.createdAt;
+    }
+    if (productPayload.updatedAt) {
+      delete productPayload.updatedAt;
+    }
+    console.log('productPayload', productPayload);
     try {
       await addProductMutation(productPayload).unwrap();
       toggleAddModal(false);
@@ -112,18 +111,18 @@ const AddProductModal: React.FC = () => {
               id="productUID"
               name="productUID"
               label="Product UID"
-              value={formData.productUID}
+              value={formData.productUID || ''}
               onChange={handleInputChange}
               placeholder="Unique Product ID"
             />
-            <InputField id="name" name="name" label="Name" value={formData.name} onChange={handleInputChange} placeholder="Product Name" />
+            <InputField id="name" name="name" label="Name" value={formData.name || ''} onChange={handleInputChange} placeholder="Product Name" />
 
             <div className="grid grid-cols-4 items-start gap-4 pr-1">
               <Label htmlFor="description" className="text-right pt-2">
                 Description
               </Label>
               <div className="col-span-3">
-                <RichTextEditor content={formData.description} onChange={handleDescriptionChange} />
+                <RichTextEditor content={formData.description || ''} onChange={handleDescriptionChange} />
               </div>
             </div>
 
@@ -131,7 +130,7 @@ const AddProductModal: React.FC = () => {
               id="imageFor"
               name="image.imageFor"
               label="Image For"
-              value={formData.image.imageFor}
+              value={formData.image?.imageFor || ''}
               onChange={handleInputChange}
               placeholder="e.g., main_display, thumbnail"
             />
@@ -140,7 +139,7 @@ const AddProductModal: React.FC = () => {
               name="image.imgURL"
               label="Image URL"
               type="url"
-              value={formData.image.imgURL}
+              value={formData.image?.imgURL || ''}
               onChange={handleInputChange}
               placeholder="https://example.com/image.jpg"
             />
@@ -150,7 +149,7 @@ const AddProductModal: React.FC = () => {
               name="realPrice"
               label="Real Price"
               type="number"
-              value={formData.realPrice}
+              value={formData.realPrice || ''}
               onChange={handleInputChange}
               placeholder="0.00"
               min={0}
@@ -160,7 +159,7 @@ const AddProductModal: React.FC = () => {
               name="discountPrice"
               label="Discount Price"
               type="number"
-              value={formData.discountPrice}
+              value={formData.discountPrice || ''}
               onChange={handleInputChange}
               placeholder="0.00"
               min={0}
