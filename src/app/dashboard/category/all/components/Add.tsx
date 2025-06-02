@@ -18,7 +18,6 @@ import { useCategory_sStore } from '../store/Store';
 import { useAddCategory_sMutation } from '../redux/rtk-Api';
 import { defaultCategory_sData } from '../store/StoreConstants';
 import { formatDuplicateKeyError, handleError, handleSuccess, isApiErrorResponse } from './utils';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const InputField: React.FC<{
   id: string;
@@ -40,8 +39,6 @@ const AddNextComponents: React.FC = () => {
   const { toggleAddModal, isAddModalOpen, newCategory_s, setNewCategory_s, setCategory_s } = useCategory_sStore();
   const [addCategory_s, { isLoading }] = useAddCategory_sMutation();
 
-  const [newItemTags, setNewItemTags] = useState<string[]>([]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewCategory_s({ ...newCategory_s, [name]: value });
@@ -49,7 +46,7 @@ const AddNextComponents: React.FC = () => {
 
   const handleAddCategory_s = async () => {
     const category_s = {
-      dataArr: newItemTags || [],
+      name: newCategory_s.name,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
