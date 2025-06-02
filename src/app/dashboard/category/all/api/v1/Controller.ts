@@ -20,6 +20,7 @@ export async function createCategory(req: Request): Promise<IResponse> {
   return withDB(async () => {
     try {
       const categoryData = await req.json();
+      console.log('categoryData', categoryData);
       const newCategory = await Category.create({ ...categoryData });
       return formatResponse(newCategory, 'Category created successfully', 201);
     } catch (error: unknown) {

@@ -19,14 +19,20 @@ import { useCategory_sStore } from '../store/Store';
 import { useUpdateCategory_sMutation } from '../redux/rtk-Api';
 import { baseICategory_s } from '../store/StoreConstants';
 import { formatDuplicateKeyError, handleError, handleSuccess, isApiErrorResponse } from './utils';
+import { Plus, X } from 'lucide-react';
 
 const EditNextComponents: React.FC = () => {
+  const [subItems, setSubItems] = useState<string[]>([]);
+  const [currSubItem, setCurrSubItem] = useState('');
   const { toggleEditModal, isEditModalOpen, newCategory_s, selectedCategory_s, setNewCategory_s, setSelectedCategory_s } = useCategory_sStore();
   const [updateCategory_s] = useUpdateCategory_sMutation();
 
   useEffect(() => {
     if (selectedCategory_s) {
       setNewCategory_s(selectedCategory_s);
+
+      const others = selectedCategory_s.subCategory || [];
+      setSubItems(others);
     }
   }, [selectedCategory_s, setNewCategory_s]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +58,16 @@ const EditNextComponents: React.FC = () => {
       handleError(errMessage);
     }
   };
-
+  const handleSubItems = () => {
+    if (currSubItem) {
+      setSubItems([...subItems, currSubItem]);
+      setCurrSubItem('');
+    }
+  };
+  const handleRemoveItem = (str: string) => {
+    const others = subItems.filter(i => i !== str);
+    setSubItems(others);
+  };
   return (
     <Dialog open={isEditModalOpen} onOpenChange={toggleEditModal}>
       <DialogContent>
@@ -69,7 +84,29 @@ const EditNextComponents: React.FC = () => {
             </div>
           </div>
           <div className="w-full mt-2" />
-
+          <div className="flex flex-col items-start justify-between gap-4 p-2 ">
+            {subItems.map((i, idx) => (
+              <p key={i + idx} className="text-sm flex items-start justify-between gap-2 p-2 w-full bg-slate-500 dark:bg-slate-800 rounded-md">
+                {i}
+                <X className="size-5 cursor-pointer" onClick={() => handleRemoveItem(i)} />
+              </p>
+            ))}
+          </div>
+          <div className="flex items-center justify-between gap-4 p-2">
+            <Input
+              placeholder="Add Sub Item"
+              id={currSubItem}
+              name={currSubItem}
+              type="text"
+              value={currSubItem}
+              onChange={e => setCurrSubItem(e.target.value)}
+              className="col-span-3"
+            />
+            <Button size="sm" variant="outlineDefault" onClick={handleSubItems}>
+              <Plus />
+              Add
+            </Button>
+          </div>
           <div className="mt-12 pt-12" />
         </ScrollArea>
         <DialogFooter>
