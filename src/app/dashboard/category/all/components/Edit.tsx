@@ -57,7 +57,7 @@ const EditNextComponents: React.FC = () => {
     <Dialog open={isEditModalOpen} onOpenChange={toggleEditModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Category_s</DialogTitle>
+          <DialogTitle>Edit Category</DialogTitle>
         </DialogHeader>
         <ScrollArea className="h-[400px] w-full rounded-md border p-4">
           <div className="grid gap-4 py-4">

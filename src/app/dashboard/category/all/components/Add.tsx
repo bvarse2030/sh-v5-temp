@@ -73,7 +73,7 @@ const AddNextComponents: React.FC = () => {
     <Dialog open={isAddModalOpen} onOpenChange={toggleAddModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Category_s</DialogTitle>
+          <DialogTitle>Add New Category</DialogTitle>
         </DialogHeader>
 
         <ScrollArea className="h-[400px] w-full rounded-md border p-4">
@@ -92,7 +92,7 @@ const AddNextComponents: React.FC = () => {
             className="border-slate-500 hover:border-slate-600 border-1 cursor-pointer"
             onClick={handleAddCategory_s}
           >
-            Add Category_s
+            Add Category
           </Button>
         </DialogFooter>
       </DialogContent>

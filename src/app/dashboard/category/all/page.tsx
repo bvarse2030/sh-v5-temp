@@ -21,10 +21,8 @@ import SearchBox from './components/SearchBox';
 import DeleteFilename8 from './components/Delete';
 import { useCategory_sStore } from './store/Store';
 import TooManyRequests from './components/TooManyRequest';
-import BulkDeleteFilename8 from './components/BulkDelete';
 import { useGetCategory_sQuery } from './redux/rtk-Api';
 import ViewCategory_sTable from './components/ViewTable';
-import BulkDynamicUpdateCategory_s from './components/BulkDynamicUpdate';
 
 const MainNextPage: React.FC = () => {
   const [hashSearchText, setHashSearchText] = useState('');
@@ -54,7 +52,7 @@ const MainNextPage: React.FC = () => {
     }
   };
 
-  const modals = [AddFilename8, ViewFilename8, BulkDeleteFilename8, EditFilename8, DeleteFilename8, BulkDynamicUpdateCategory_s];
+  const modals = [AddFilename8, ViewFilename8, EditFilename8, DeleteFilename8];
 
   let renderUI = (
     <div className="container mx-auto p-4">
