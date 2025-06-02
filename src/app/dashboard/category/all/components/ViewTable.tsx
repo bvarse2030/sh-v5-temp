@@ -33,11 +33,8 @@ const ViewTableNextComponents: React.FC = () => {
   const [sortConfig, setSortConfig] = useState<{ key: keyof ICategory_s; direction: 'asc' | 'desc' } | null>(null);
   const {
     setSelectedCategory_s,
-    toggleBulkEditModal,
-    toggleBulkUpdateModal,
     toggleViewModal,
     queryPramsLimit,
-    toggleBulkDynamicUpdateModal,
     queryPramsPage,
     queryPramsQ,
     toggleEditModal,

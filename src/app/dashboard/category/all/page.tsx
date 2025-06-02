@@ -18,6 +18,7 @@ import AddFilename8 from './components/Add';
 import EditFilename8 from './components/Edit';
 import ViewFilename8 from './components/View';
 import SearchBox from './components/SearchBox';
+import BulkDeleteNextComponents from './components/BulkDelete';
 import DeleteFilename8 from './components/Delete';
 import { useCategory_sStore } from './store/Store';
 import TooManyRequests from './components/TooManyRequest';
@@ -52,7 +53,7 @@ const MainNextPage: React.FC = () => {
     }
   };
 
-  const modals = [AddFilename8, ViewFilename8, EditFilename8, DeleteFilename8];
+  const modals = [AddFilename8, ViewFilename8, EditFilename8, DeleteFilename8, BulkDeleteNextComponents];
 
   let renderUI = (
     <div className="container mx-auto p-4">

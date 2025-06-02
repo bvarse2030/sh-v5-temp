@@ -86,7 +86,7 @@ const EditNextComponents: React.FC = () => {
           <div className="w-full mt-2" />
           <div className="flex flex-col items-start justify-between gap-4 p-2 ">
             {subItems.map((i, idx) => (
-              <p key={i + idx} className="text-sm flex items-start justify-between gap-2 p-2 w-full bg-slate-500 dark:bg-slate-800 rounded-md">
+              <p key={i + idx} className="text-sm flex items-start justify-between gap-2 p-2 w-full bg-slate-200 dark:bg-slate-800 rounded-md">
                 {i}
                 <X className="size-5 cursor-pointer" onClick={() => handleRemoveItem(i)} />
               </p>
