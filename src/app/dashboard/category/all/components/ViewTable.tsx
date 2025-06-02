@@ -85,7 +85,7 @@ const ViewTableNextComponents: React.FC = () => {
   }, [getAllCategory_sData, sortConfig]);
   const handleSelectAll = (isChecked: boolean) => setBulkData(isChecked ? getAllCategory_sData : []);
   const handleSelectRow = (isChecked: boolean, Category_s: ICategory_s) =>
-    setBulkData(isChecked ? [...bulkData, Category_s] : bulkData.filter(item => item.email !== Category_s.email));
+    setBulkData(isChecked ? [...bulkData, Category_s] : bulkData.filter(item => item.name !== Category_s.name));
   const handlePopUp = () => {
     handleSuccess('Reload Successful');
   };
@@ -112,7 +112,7 @@ const ViewTableNextComponents: React.FC = () => {
         <PencilIcon className="w-4 h-4 mr-1" /> Edit
       </Button>
       <Button
-        variant="outlineGarden"
+        variant="outlineFire"
         size="sm"
         onClick={() => {
           setSelectedCategory_s(Category_s);
@@ -125,17 +125,12 @@ const ViewTableNextComponents: React.FC = () => {
   );
   const renderTableRows = () =>
     sortedCategory_sData.map((Category_s: ICategory_s, index: number) => (
-      <TableRow key={(Category_s.email as string) || index}>
+      <TableRow key={(Category_s.name as string) || index}>
         <TableCell>
-          <Checkbox onCheckedChange={checked => handleSelectRow(!!checked, Category_s)} checked={bulkData.some(item => item.email === Category_s.email)} />
+          <Checkbox onCheckedChange={checked => handleSelectRow(!!checked, Category_s)} checked={bulkData.some(item => item.name === Category_s.name)} />
         </TableCell>
         <TableCell className="font-medium">{(Category_s.name as string) || ''}</TableCell>
-        <TableCell>{(Category_s.email as string) || ''}</TableCell>
-        <TableCell>{(Category_s.passCode as string) || ''}</TableCell>
-        <TableCell>{(Category_s.alias as string) || ''}</TableCell>
-        <TableCell>
-          <span className={`py-1 rounded-full text-xs font-medium bg-green-500 text-green-50 px-3`}>{(Category_s.role as string) || ''}</span>
-        </TableCell>
+
         <TableCell>{formatDate(Category_s.createdAt)}</TableCell>
         <TableCell className="justify-end flex">{renderActions(Category_s)}</TableCell>
       </TableRow>
@@ -153,22 +148,12 @@ const ViewTableNextComponents: React.FC = () => {
             Total Selected <span className="text-xs text-slate-500">({bulkData.length})</span>
           </div>
           <div className="px-2 gap-2 flex items-center justify-end w-full">
-            <Button variant="outlineDefault" size="sm" onClick={() => toggleBulkDynamicUpdateModal(true)} disabled={bulkData.length === 0}>
-              <PencilIcon className="w-4 h-4 mr-1" /> B. Update
-            </Button>
-            <Button variant="outlineDefault" size="sm" onClick={() => toggleBulkUpdateModal(true)} disabled={bulkData.length === 0}>
-              <PencilIcon className="w-4 h-4 mr-1" /> B. Update
-            </Button>
-            <Button variant="outlineDefault" size="sm" onClick={() => toggleBulkEditModal(true)} disabled={bulkData.length === 0}>
-              <PencilIcon className="w-4 h-4 mr-1" /> Edit
-            </Button>
             <Button variant="outlineFire" size="sm" onClick={() => toggleBulkDeleteModal(true)} disabled={bulkData.length === 0}>
               <TrashIcon className="w-4 h-4 mr-1" /> Delete
             </Button>
             <Button
-              variant="outline"
+              variant="outlineGarden"
               size="sm"
-              className="border-1 bg-green-100 hover:bg-green-200 border-green-300 hover:border-green-400 text-green-400 hover:text-green-500 cursor-pointer "
               onClick={() => {
                 refetch();
                 handlePopUp();
@@ -186,7 +171,7 @@ const ViewTableNextComponents: React.FC = () => {
             <TableHead>
               <Checkbox onCheckedChange={checked => handleSelectAll(!!checked)} checked={bulkData.length === getAllCategory_sData.length} />
             </TableHead>
-            {['name', 'email', 'passCode', 'alias', 'role', 'createdAt'].map(key => (
+            {['name', 'createdAt'].map(key => (
               <TableHead key={key} className={`font-bold text-slate-50 cursor-pointer`} onClick={() => handleSort(key as keyof ICategory_s)}>
                 {key.charAt(0).toUpperCase() + key.slice(1)} {sortConfig?.key === key && (sortConfig.direction === 'asc' ? '↑' : '↓')}
               </TableHead>
