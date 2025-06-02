@@ -6,44 +6,118 @@
 |-----------------------------------------
 */
 
-import mongoose, { Schema } from 'mongoose';
-import { productsSelectorArr, select } from '../../store/StoreConstants';
+import mongoose, { Schema, Document } from 'mongoose';
 
-const productSchema = new Schema(
+export interface IImage {
+  imageFor: string;
+  imgURL: string;
+}
+export const imageSchema = new Schema<IImage>(
   {
+    imageFor: { type: String, required: true },
+    imgURL: { type: String, required: true },
+  },
+  { _id: false },
+);
+
+export interface IReviewItem {
+  review: string;
+  name: string;
+  userUID: string;
+}
+export const reviewItemSchema = new Schema<IReviewItem>(
+  {
+    review: { type: String, required: true },
     name: { type: String, required: true },
-    dataArr: [{ type: String, required: false }],
-    email: {
+    userUID: { type: String, required: true },
+  },
+  { _id: false },
+);
+
+export interface IPickupPointItem {
+  pickupPointsUID: string;
+  name: string;
+}
+export const pickupPointItemSchema = new Schema<IPickupPointItem>(
+  {
+    pickupPointsUID: { type: String, required: true },
+    name: { type: String, required: true },
+  },
+  { _id: false },
+);
+
+export interface IAttributeItem {
+  attributesUID: string;
+  name: string;
+}
+export const attributeItemSchema = new Schema<IAttributeItem>(
+  {
+    attributesUID: { type: String, required: true },
+    name: { type: String, required: true },
+  },
+  { _id: false },
+);
+
+export interface IShopInfoItem {
+  shopName: string;
+  shopUID: string;
+}
+export const shopInfoItemSchema = new Schema<IShopInfoItem>(
+  {
+    shopName: { type: String, required: true },
+    shopUID: { type: String, required: true },
+  },
+  { _id: false },
+);
+
+export const productSchema = new Schema(
+  {
+    productUID: { type: String, required: true, unique: true },
+    name: { type: String, required: true, trim: true },
+    description: { type: String, required: true, trim: true },
+    image: { type: imageSchema, required: true },
+    realPrice: { type: Number, required: true, min: 0 },
+    discountPrice: { type: Number, required: true, min: 0 },
+    reviews: { type: [reviewItemSchema], default: [] },
+    color: { type: String, trim: true },
+    category: { type: String, trim: true, required: true },
+    pickupPoints: { type: [pickupPointItemSchema], default: [] },
+    attributes: { type: [attributeItemSchema], default: [] },
+    productStatus: {
       type: String,
+      enum: ['disabled', 'out-of-stock', 'coming-soon', 'active'],
+      default: 'coming-soon',
       required: true,
-      unique: true,
-      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email'],
     },
-    passCode: { type: String, required: true },
-    alias: { type: String, required: true },
-    role: {
-      type: String,
-      enum: productsSelectorArr,
-      default: select,
-    },
-    images: [{ type: String }],
-    descriptions: { type: String },
+    totalSells: { type: Number, default: 0 },
+    shopsInfo: { type: [shopInfoItemSchema], default: [] },
   },
   { timestamps: true },
 );
 
-export default mongoose.models.Product || mongoose.model('Product', productSchema);
+productSchema.index({ category: 1, productStatus: 1 });
+productSchema.index({ name: 'text', description: 'text' });
 
-export interface IProducts {
+export interface IProduct {
+  _id: string;
+  productUID: string;
   name: string;
-  dataArr?: string[];
-  email: string;
-  passCode: string;
-  alias: string;
-  role: string;
-  images?: string[];
-  descriptions?: string;
+  description: string;
+  image: IImage;
+  realPrice: number;
+  discountPrice: number;
+  reviews?: IReviewItem[];
+  color?: string;
+  category: string;
+  pickupPoints?: IPickupPointItem[];
+  attributes?: IAttributeItem[];
+  productStatus: 'disabled' | 'out-of-stock' | 'coming-soon' | 'active';
+  totalSells?: number;
+  shopsInfo?: IShopInfoItem[];
   createdAt: Date;
   updatedAt: Date;
-  _id: string;
 }
+
+const ProductModel = mongoose.models.Product || mongoose.model<IProduct>('Product', productSchema);
+
+export default ProductModel;

@@ -1,12 +1,4 @@
-/*
-|-----------------------------------------
-| setting up Controller for the App
-| @author: Toufiquer Rahman<toufiquer.0@gmail.com>
-| @copyright: varse-project, May, 2025
-|-----------------------------------------
-*/
-
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,77 +9,89 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 
 import { useProductsStore } from '../store/Store';
 import { useAddProductsMutation } from '../redux/rtk-Api';
-import { defaultProductsData, select, ISelect, productsSelectorArr } from '../store/StoreConstants';
+import { defaultProductsData, productStatusOptions, defaultProductStatus } from '../store/StoreConstants';
+import type { IProduct } from '../api/v1/Model';
 
-import DataSelect from './DataSelect';
-import ImagesSelect from './ImagesSelect';
 import RichTextEditor from './rich-text-editor';
 import { formatDuplicateKeyError, handleError, handleSuccess, isApiErrorResponse } from './utils';
 
-const InputField: React.FC<{
+interface InputFieldProps {
   id: string;
   name: string;
   label: string;
   type?: string;
-  value: string;
+  value: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ id, name, label, type = 'text', value, onChange }) => (
-  <div className="grid grid-cols-4 items-center gap-4 pr-1">
+  className?: string;
+  placeholder?: string;
+  min?: number;
+}
+
+const InputField: React.FC<InputFieldProps> = ({ id, name, label, type = 'text', value, onChange, className, placeholder, min }) => (
+  <div className={`grid grid-cols-4 items-center gap-4 pr-1 ${className}`}>
     <Label htmlFor={id} className="text-right">
       {label}
     </Label>
-    <Input id={id} name={name} type={type} value={value} onChange={onChange} className="col-span-3" />
+    <Input id={id} name={name} type={type} value={value} onChange={onChange} className="col-span-3" placeholder={placeholder} min={min} />
   </div>
 );
 
-const AddNextComponents: React.FC = () => {
-  const { toggleAddModal, isAddModalOpen, newProducts, setNewProducts, setProducts } = useProductsStore();
-  const [addProducts, { isLoading }] = useAddProductsMutation();
+const AddProductModal: React.FC = () => {
+  const { toggleAddModal, isAddModalOpen } = useProductsStore();
+  const [addProductMutation, { isLoading }] = useAddProductsMutation();
+  const [formData, setFormData] = useState<IProduct>(defaultProductsData);
 
-  const [newItemTags, setNewItemTags] = useState<string[]>([]);
-  const [newImages, setNewImages] = useState<string[]>([]);
-
-  const [descriptions, setDescriptions] = useState('');
-
-  const onChange = (content: string) => {
-    setDescriptions(content);
-    console.log(content);
-  };
+  useEffect(() => {
+    if (isAddModalOpen) {
+      setFormData(defaultProductsData);
+    }
+  }, [isAddModalOpen]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewProducts({ ...newProducts, [name]: value });
+    const { name, value, type } = e.target;
+    setFormData(prev => {
+      if (name.startsWith('image.')) {
+        const imageField = name.split('.')[1] as keyof IProduct['image'];
+        return {
+          ...prev,
+          image: {
+            ...prev.image,
+            [imageField]: value,
+          },
+        };
+      }
+      return {
+        ...prev,
+        [name]: type === 'number' ? (value === '' ? '' : parseFloat(value)) : value,
+      };
+    });
   };
 
-  const handleRoleChange = (value: string) => {
-    setNewProducts({ ...newProducts, role: value as ISelect });
+  const handleDescriptionChange = useCallback((content: string) => {
+    setFormData(prev => ({ ...prev, description: content }));
+  }, []);
+
+  const handleStatusChange = (value: string) => {
+    setFormData(prev => ({ ...prev, productStatus: value as IProduct['productStatus'] }));
   };
 
-  const handleAddProducts = async () => {
-    const products = {
-      dataArr: newItemTags || [],
-      name: newProducts.name || '',
-      email: newProducts.email || '',
-      passCode: newProducts.passCode || '',
-      alias: newProducts.alias || '',
-      role: (newProducts.role as ISelect) || select,
-      images: newImages || [],
-      descriptions: descriptions || '',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+  const handleAddProduct = async () => {
+    const productPayload: Partial<IProduct> = {
+      ...formData,
+      realPrice: Number(formData.realPrice),
+      discountPrice: Number(formData.discountPrice),
+      totalSells: Number(formData.totalSells || 0),
     };
 
     try {
-      const addedProducts = await addProducts(products).unwrap(); // Get the returned data
-      setProducts([products, addedProducts]); // Use the returned data instead of the local `Products` object
+      await addProductMutation(productPayload).unwrap();
       toggleAddModal(false);
-      setNewProducts(defaultProductsData);
-      handleSuccess('Added Successful');
+      handleSuccess('Product added successfully');
     } catch (error: unknown) {
-      console.log(error);
-      let errMessage: string = '';
+      console.error('Failed to add product:', error);
+      let errMessage: string = 'An unknown error occurred.';
       if (isApiErrorResponse(error)) {
-        errMessage = formatDuplicateKeyError(error.data.message);
+        errMessage = formatDuplicateKeyError(error.data.message) || error.data.message || 'API error response';
       } else if (error instanceof Error) {
         errMessage = error.message;
       }
@@ -97,59 +101,124 @@ const AddNextComponents: React.FC = () => {
 
   return (
     <Dialog open={isAddModalOpen} onOpenChange={toggleAddModal}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Add New Products</DialogTitle>
+          <DialogTitle>Add New Product</DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="h-[400px] w-full rounded-md border p-4">
+        <ScrollArea className="h-[500px] w-full rounded-md p-1 pr-4">
           <div className="grid gap-4 py-4">
-            <InputField id="name" name="name" label="Name" value={(newProducts.name as string) || ''} onChange={handleInputChange} />
-            <InputField id="email" name="email" label="Email" type="email" value={(newProducts.email as string) || ''} onChange={handleInputChange} />
             <InputField
-              id="passCode"
-              name="passCode"
-              label="Pass Code"
-              type="password"
-              value={(newProducts.passCode as string) || ''}
+              id="productUID"
+              name="productUID"
+              label="Product UID"
+              value={formData.productUID}
               onChange={handleInputChange}
+              placeholder="Unique Product ID"
             />
-            <InputField id="alias" name="alias" label="Alias" value={(newProducts.alias as string) || ''} onChange={handleInputChange} />
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="role" className="text-right">
-                Role
+            <InputField id="name" name="name" label="Name" value={formData.name} onChange={handleInputChange} placeholder="Product Name" />
+
+            <div className="grid grid-cols-4 items-start gap-4 pr-1">
+              <Label htmlFor="description" className="text-right pt-2">
+                Description
               </Label>
-              <Select onValueChange={handleRoleChange} defaultValue={(newProducts.role as string) || ''}>
+              <div className="col-span-3">
+                <RichTextEditor content={formData.description} onChange={handleDescriptionChange} />
+              </div>
+            </div>
+
+            <InputField
+              id="imageFor"
+              name="image.imageFor"
+              label="Image For"
+              value={formData.image.imageFor}
+              onChange={handleInputChange}
+              placeholder="e.g., main_display, thumbnail"
+            />
+            <InputField
+              id="imgURL"
+              name="image.imgURL"
+              label="Image URL"
+              type="url"
+              value={formData.image.imgURL}
+              onChange={handleInputChange}
+              placeholder="https://example.com/image.jpg"
+            />
+
+            <InputField
+              id="realPrice"
+              name="realPrice"
+              label="Real Price"
+              type="number"
+              value={formData.realPrice}
+              onChange={handleInputChange}
+              placeholder="0.00"
+              min={0}
+            />
+            <InputField
+              id="discountPrice"
+              name="discountPrice"
+              label="Discount Price"
+              type="number"
+              value={formData.discountPrice}
+              onChange={handleInputChange}
+              placeholder="0.00"
+              min={0}
+            />
+
+            <InputField
+              id="color"
+              name="color"
+              label="Color (Optional)"
+              value={formData.color || ''}
+              onChange={handleInputChange}
+              placeholder="e.g., Red, Blue"
+            />
+            <InputField
+              id="category"
+              name="category"
+              label="Category"
+              value={formData.category}
+              onChange={handleInputChange}
+              placeholder="e.g., Electronics, Clothing"
+            />
+
+            <div className="grid grid-cols-4 items-center gap-4 pr-1">
+              <Label htmlFor="productStatus" className="text-right">
+                Status
+              </Label>
+              <Select onValueChange={handleStatusChange} value={formData.productStatus || defaultProductStatus}>
                 <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select a role" />
+                  <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
-                  {productsSelectorArr?.map((i, index) => (
-                    <SelectItem key={i + index} className="cursor-pointer" value={i}>
-                      {i}
+                  {productStatusOptions.map(status => (
+                    <SelectItem key={status} value={status} className="cursor-pointer">
+                      {status.charAt(0).toUpperCase() + status.slice(1).replace('-', ' ')}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            <DataSelect newItemTags={newItemTags as string[]} setNewItemTags={setNewItemTags} />
-            <ImagesSelect newImages={newImages as string[]} setNewImages={setNewImages} />
-
-            <RichTextEditor content={descriptions} onChange={onChange} />
+            <InputField
+              id="totalSells"
+              name="totalSells"
+              label="Total Sells (Optional)"
+              type="number"
+              value={formData.totalSells || 0}
+              onChange={handleInputChange}
+              placeholder="0"
+              min={0}
+            />
           </div>
         </ScrollArea>
 
         <DialogFooter>
-          <Button variant="outline" className="border-slate-500 hover:border-slate-600 border-1 cursor-pointer" onClick={() => toggleAddModal(false)}>
+          <Button variant="outline" className="border-slate-400 hover:border-slate-600" onClick={() => toggleAddModal(false)}>
             Cancel
           </Button>
-          <Button
-            disabled={isLoading}
-            variant="outline"
-            className="border-slate-500 hover:border-slate-600 border-1 cursor-pointer"
-            onClick={handleAddProducts}
-          >
-            Add Products
+          <Button disabled={isLoading} variant="default" className="bg-slate-700 hover:bg-slate-800 text-white" onClick={handleAddProduct}>
+            {isLoading ? 'Adding...' : 'Add Product'}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -157,4 +226,4 @@ const AddNextComponents: React.FC = () => {
   );
 };
 
-export default AddNextComponents;
+export default AddProductModal;

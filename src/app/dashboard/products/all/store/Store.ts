@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { IProducts } from '../api/v1/Model';
+import { IProduct } from '../api/v1/Model';
 import { ProductsStore } from './StoreTypes';
 import { baseIProducts, queryParams } from './StoreConstants';
 
@@ -22,8 +22,8 @@ export const useProductsStore = create<ProductsStore>(set => ({
   setQueryPramsLimit: (payload: number) => set({ queryPramsLimit: payload }),
   setQueryPramsPage: (payload: number) => set({ queryPramsPage: payload }),
   setQueryPramsQ: (payload: string) => set({ queryPramsQ: payload }),
-  setBulkData: (bulkData: IProducts[]) => set({ bulkData }),
-  setProducts: (products: IProducts[]) => set({ products }),
+  setBulkData: (bulkData: IProduct[]) => set({ bulkData }),
+  setProducts: (products: IProduct[]) => set({ products }),
   setSelectedProducts: Products => set({ selectedProducts: Products }),
   setNewProducts: Products =>
     set(state => ({

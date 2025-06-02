@@ -1,15 +1,7 @@
-/*
-|-----------------------------------------
-| setting up Controller for the App
-| @author: Toufiquer Rahman<toufiquer.0@gmail.com>
-| @copyright: varse-project, May, 2025
-|-----------------------------------------
-*/
-
 'use client';
 
 import { format } from 'date-fns';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { IoReloadCircleOutline } from 'react-icons/io5';
 import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
@@ -21,7 +13,7 @@ import ErrorMessageComponent from '@/components/common/Error';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { IProducts } from '../api/v1/Model';
+import { IProduct } from '../api/v1/Model';
 import { pageLimitArr } from '../store/StoreConstants';
 import { useProductsStore } from '../store/Store';
 import { useGetProductsQuery } from '../redux/rtk-Api';
@@ -29,15 +21,29 @@ import { useGetProductsQuery } from '../redux/rtk-Api';
 import Pagination from './Pagination';
 import { handleSuccess } from './utils';
 
+const getStatusColor = (status: IProduct['productStatus']) => {
+  switch (status) {
+    case 'active':
+      return 'bg-green-500 text-green-50';
+    case 'out-of-stock':
+      return 'bg-yellow-500 text-yellow-50';
+    case 'disabled':
+      return 'bg-red-500 text-red-50';
+    case 'coming-soon':
+      return 'bg-blue-500 text-blue-50';
+    default:
+      return 'bg-gray-500 text-gray-50';
+  }
+};
+
 const ViewTableNextComponents: React.FC = () => {
-  const [sortConfig, setSortConfig] = useState<{ key: keyof IProducts; direction: 'asc' | 'desc' } | null>(null);
+  const [sortConfig, setSortConfig] = useState<{ key: keyof IProduct; direction: 'asc' | 'desc' } | null>({ key: 'createdAt', direction: 'desc' });
   const {
     setSelectedProducts,
     toggleBulkEditModal,
     toggleBulkUpdateModal,
     toggleViewModal,
     queryPramsLimit,
-    toggleBulkDynamicUpdateModal,
     queryPramsPage,
     queryPramsQ,
     toggleEditModal,
@@ -56,7 +62,11 @@ const ViewTableNextComponents: React.FC = () => {
     isError,
     error,
   } = useGetProductsQuery(
-    { q: queryPramsQ, limit: queryPramsLimit, page: queryPramsPage },
+    {
+      q: queryPramsQ,
+      limit: queryPramsLimit,
+      page: queryPramsPage,
+    },
     {
       selectFromResult: ({ data, isError, error, isLoading }) => ({
         data,
@@ -67,35 +77,58 @@ const ViewTableNextComponents: React.FC = () => {
     },
   );
 
-  const getAllProductsData = useMemo(() => getResponseData?.data?.products || [], [getResponseData]);
+  const allProductsData = useMemo(() => getResponseData?.data?.products || [], [getResponseData]);
 
-  const formatDate = (date?: Date) => (date ? format(date, 'MMM dd, yyyy') : 'N/A');
+  const formatDate = (date?: Date | string) => (date ? format(new Date(date), 'MMM dd, yyyy') : 'N/A');
 
-  const handleSort = (key: keyof IProducts) => {
-    setSortConfig(prev => (prev?.key === key ? { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' } : { key, direction: 'asc' }));
+  const handleSort = (key: keyof IProduct) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
   };
 
   const sortedProductsData = useMemo(() => {
-    if (!sortConfig) return getAllProductsData;
-    return [...getAllProductsData].sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
-      if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
+    if (!sortConfig) return allProductsData;
+    return [...allProductsData].sort((a, b) => {
+      const aValue = a[sortConfig.key];
+      const bValue = b[sortConfig.key];
+
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return sortConfig.direction === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+      }
+      if (aValue instanceof Date && bValue instanceof Date) {
+        return sortConfig.direction === 'asc' ? aValue.getTime() - bValue.getTime() : bValue.getTime() - aValue.getTime();
+      }
+      if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
     });
-  }, [getAllProductsData, sortConfig]);
-  const handleSelectAll = (isChecked: boolean) => setBulkData(isChecked ? getAllProductsData : []);
-  const handleSelectRow = (isChecked: boolean, Products: IProducts) =>
-    setBulkData(isChecked ? [...bulkData, Products] : bulkData.filter(item => item.email !== Products.email));
-  const handlePopUp = () => {
-    handleSuccess('Reload Successful');
+  }, [allProductsData, sortConfig]);
+
+  const handleSelectAll = (isChecked: boolean) => {
+    setBulkData(isChecked ? sortedProductsData.map((p: IProduct) => p._id.toString()) : []);
   };
-  const renderActions = (Products: IProducts) => (
-    <div className="flex gap-2">
+
+  const handleSelectRow = (isChecked: boolean, product: IProduct) => {
+    setBulkData(isChecked ? [...bulkData, product] : bulkData.filter(p => p._id !== product._id));
+  };
+
+  const handlePopUp = () => {
+    handleSuccess('Data reloaded successfully');
+  };
+
+  const renderActions = (product: IProduct) => (
+    <div className="flex gap-2 justify-end">
       <Button
         variant="outlineDefault"
         size="sm"
         onClick={() => {
-          setSelectedProducts(Products);
+          setSelectedProducts(product);
           toggleViewModal(true);
         }}
       >
@@ -105,17 +138,17 @@ const ViewTableNextComponents: React.FC = () => {
         variant="outlineDefault"
         size="sm"
         onClick={() => {
-          setSelectedProducts(Products);
+          setSelectedProducts(product);
           toggleEditModal(true);
         }}
       >
         <PencilIcon className="w-4 h-4 mr-1" /> Edit
       </Button>
       <Button
-        variant="outlineGarden"
+        variant="outlineFire"
         size="sm"
         onClick={() => {
-          setSelectedProducts(Products);
+          setSelectedProducts(product);
           toggleDeleteModal(true);
         }}
       >
@@ -123,52 +156,77 @@ const ViewTableNextComponents: React.FC = () => {
       </Button>
     </div>
   );
+
+  const tableHeaders: { key: keyof IProduct; label: string; sortable?: boolean }[] = [
+    { key: 'productUID', label: 'UID', sortable: true },
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'category', label: 'Category', sortable: true },
+    { key: 'realPrice', label: 'Price', sortable: true },
+    { key: 'productStatus', label: 'Status', sortable: true },
+    { key: 'totalSells', label: 'Sells', sortable: true },
+    { key: 'createdAt', label: 'Created', sortable: true },
+  ];
+
   const renderTableRows = () =>
-    sortedProductsData.map((Products: IProducts, index: number) => (
-      <TableRow key={(Products.email as string) || index}>
+    sortedProductsData.map((product: IProduct) => (
+      <TableRow key={product._id.toString()}>
         <TableCell>
-          <Checkbox onCheckedChange={checked => handleSelectRow(!!checked, Products)} checked={bulkData.some(item => item.email === Products.email)} />
+          <Checkbox onCheckedChange={checked => handleSelectRow(!!checked, product)} checked={bulkData.includes(product)} />
         </TableCell>
-        <TableCell className="font-medium">{(Products.name as string) || ''}</TableCell>
-        <TableCell>{(Products.email as string) || ''}</TableCell>
-        <TableCell>{(Products.passCode as string) || ''}</TableCell>
-        <TableCell>{(Products.alias as string) || ''}</TableCell>
+        <TableCell className="font-medium truncate max-w-[100px]">{product.productUID}</TableCell>
+        <TableCell className="truncate max-w-[150px]">{product.name}</TableCell>
+        <TableCell className="truncate max-w-[100px]">{product.category}</TableCell>
+        <TableCell>${product.realPrice?.toFixed(2)}</TableCell>
         <TableCell>
-          <span className={`py-1 rounded-full text-xs font-medium bg-green-500 text-green-50 px-3`}>{(Products.role as string) || ''}</span>
+          <span className={`py-1 px-3 rounded-full text-xs font-medium ${getStatusColor(product.productStatus)}`}>
+            {product.productStatus?.replace('-', ' ')}
+          </span>
         </TableCell>
-        <TableCell>{formatDate(Products.createdAt)}</TableCell>
-        <TableCell className="justify-end flex">{renderActions(Products)}</TableCell>
+        <TableCell>{product.totalSells || 0}</TableCell>
+        <TableCell>{formatDate(product.createdAt)}</TableCell>
+        <TableCell className="text-right">{renderActions(product)}</TableCell>
       </TableRow>
     ));
 
+  useEffect(() => {
+    if (getResponseData?.data?.total === 0) {
+      setBulkData([]);
+    }
+  }, [getResponseData, setBulkData]);
+
   if (isLoading) return <LoadingComponent />;
-  if (isError) return <ErrorMessageComponent message={error || 'An error occurred'} />;
-  if (getAllProductsData.length === 0) return <div className="py-12 text-2xl text-slate-500">Ops! Nothing was found.</div>;
+  if (isError && error) {
+    const errorMessage =
+      typeof error === 'object' && 'data' in error && error.data && typeof error.data === 'object' && 'message' in error.data
+        ? (error.data as any).message
+        : 'An error occurred fetching products.';
+    return <ErrorMessageComponent message={errorMessage} />;
+  }
+  if (!isLoading && allProductsData.length === 0 && queryPramsQ) {
+    return <div className="py-12 text-center text-xl text-slate-500">No products found for your search: "{queryPramsQ}".</div>;
+  }
+  if (!isLoading && allProductsData.length === 0) {
+    return <div className="py-12 text-center text-xl text-slate-500">No products available. Add some!</div>;
+  }
 
   return (
     <div className="w-full flex flex-col">
       <div className="w-full my-4">
-        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 pb-2 border-b-1 border-slat-400">
-          <div className="px-2 gap-2 flex items-center justify-start w-full">
+        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 pb-2 border-b border-slate-300 dark:border-slate-700">
+          <div className="px-2 gap-2 flex items-center justify-start w-full md:w-auto">
             Total Selected <span className="text-xs text-slate-500">({bulkData.length})</span>
           </div>
-          <div className="px-2 gap-2 flex items-center justify-end w-full">
-            <Button variant="outlineDefault" size="sm" onClick={() => toggleBulkDynamicUpdateModal(true)} disabled={bulkData.length === 0}>
-              <PencilIcon className="w-4 h-4 mr-1" /> B. Update
-            </Button>
+          <div className="px-2 gap-2 flex flex-wrap items-center justify-end w-full md:w-auto">
             <Button variant="outlineDefault" size="sm" onClick={() => toggleBulkUpdateModal(true)} disabled={bulkData.length === 0}>
-              <PencilIcon className="w-4 h-4 mr-1" /> B. Update
-            </Button>
-            <Button variant="outlineDefault" size="sm" onClick={() => toggleBulkEditModal(true)} disabled={bulkData.length === 0}>
-              <PencilIcon className="w-4 h-4 mr-1" /> Edit
+              <PencilIcon className="w-4 h-4 mr-1" /> Bulk Update
             </Button>
             <Button variant="outlineFire" size="sm" onClick={() => toggleBulkDeleteModal(true)} disabled={bulkData.length === 0}>
-              <TrashIcon className="w-4 h-4 mr-1" /> Delete
+              <TrashIcon className="w-4 h-4 mr-1" /> Bulk Delete
             </Button>
             <Button
               variant="outline"
               size="sm"
-              className="border-1 bg-green-100 hover:bg-green-200 border-green-300 hover:border-green-400 text-green-400 hover:text-green-500 cursor-pointer "
+              className="border-green-300 hover:border-green-400 text-green-500 hover:text-green-600 dark:border-green-700 dark:hover:border-green-600 dark:text-green-400 dark:hover:text-green-300"
               onClick={() => {
                 refetch();
                 handlePopUp();
@@ -180,31 +238,41 @@ const ViewTableNextComponents: React.FC = () => {
           </div>
         </div>
       </div>
-      <Table className="border-1 border-slate-500">
-        <TableHeader className="bg-slate-600 text-slate-50 rounded overflow-hidden border-1 border-slate-600">
-          <TableRow>
-            <TableHead>
-              <Checkbox onCheckedChange={checked => handleSelectAll(!!checked)} checked={bulkData.length === getAllProductsData.length} />
-            </TableHead>
-            {['name', 'email', 'passCode', 'alias', 'role', 'createdAt'].map(key => (
-              <TableHead key={key} className={`font-bold text-slate-50 cursor-pointer`} onClick={() => handleSort(key as keyof IProducts)}>
-                {key.charAt(0).toUpperCase() + key.slice(1)} {sortConfig?.key === key && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+      <div className="overflow-x-auto">
+        <Table className="min-w-full border border-slate-300 dark:border-slate-700">
+          <TableHeader className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            <TableRow>
+              <TableHead className="w-[50px]">
+                <Checkbox
+                  onCheckedChange={checked => handleSelectAll(!!checked)}
+                  checked={bulkData.length > 0 && bulkData.length === sortedProductsData.length}
+                  disabled={sortedProductsData.length === 0}
+                />
               </TableHead>
-            ))}
-            <TableHead className="table-cell font-bold text-slate-50 text-end pr-4">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>{renderTableRows()}</TableBody>
-      </Table>
+              {tableHeaders.map(header => (
+                <TableHead
+                  key={header.key}
+                  className={`font-semibold cursor-pointer ${!header.sortable ? 'cursor-default' : ''}`}
+                  onClick={() => header.sortable && handleSort(header.key as keyof IProduct)}
+                >
+                  {header.label} {sortConfig?.key === header.key && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                </TableHead>
+              ))}
+              <TableHead className="font-semibold text-right pr-4">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>{renderTableRows()}</TableBody>
+        </Table>
+      </div>
       <Pagination
         currentPage={queryPramsPage}
         itemsPerPage={queryPramsLimit}
         onPageChange={e => setQueryPramsPage(e)}
-        totalItems={getResponseData?.data?.total}
+        totalItems={getResponseData?.data?.total || 0}
       />
-      <div className="max-w-[380px] flex items-center justify-between pl-2 gap-4 border-1 border-slate-200 rounded-xl w-full mx-auto mt-8">
-        <Label htmlFor="set-limit" className="text-right text-slate-500 font-thin pl-3">
-          Products per page
+      <div className="max-w-[300px] flex items-center justify-between pl-2 gap-4 border border-slate-300 dark:border-slate-700 rounded-lg w-full mx-auto mt-8 p-2">
+        <Label htmlFor="set-limit" className="text-right text-sm text-slate-600 dark:text-slate-400">
+          Items per page:
         </Label>
         <Select
           onValueChange={value => {
@@ -213,15 +281,15 @@ const ViewTableNextComponents: React.FC = () => {
           }}
           defaultValue={queryPramsLimit.toString()}
         >
-          <SelectTrigger className="col-span-4">
-            <SelectValue placeholder="Select a limit" />
+          <SelectTrigger className="w-[80px]">
+            <SelectValue placeholder="Limit" />
           </SelectTrigger>
           <SelectContent>
             {pageLimitArr.map(i => (
               <SelectItem
                 key={i}
                 value={i.toString()}
-                className="focus:bg-slate-200 hover:bg-slate-300 dark:focus:bg-slate-500 dark:hover:bg-slate-600 cursor-pointer"
+                className="focus:bg-slate-200 hover:bg-slate-300 dark:focus:bg-slate-700 dark:hover:bg-slate-600 cursor-pointer"
               >
                 {i}
               </SelectItem>

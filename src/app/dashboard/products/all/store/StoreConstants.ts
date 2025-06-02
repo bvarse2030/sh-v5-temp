@@ -1,21 +1,40 @@
-import { IProducts } from '../api/v1/Model';
+import { IProduct, IImage, IReviewItem, IPickupPointItem, IAttributeItem, IShopInfoItem } from '../api/v1/Model'; // Ensure this path and these imports are correct for your project structure
+import mongoose from 'mongoose'; // Needed for mongoose.Types.ObjectId if used directly
 
 export const baseIProductsPerPage = 2;
-export const queryParams = { q: '', page: 1, limit: baseIProductsPerPage };
-export const pageLimitArr: number[] = [baseIProductsPerPage, 10, 50, 100, 200];
+export const queryParams = { q: '', page: 1, limit: baseIProductsPerPage, category: '', status: '', sortBy: 'updatedAt', sortOrder: 'desc' };
+export const pageLimitArr: number[] = [baseIProductsPerPage, 10, 20, 50, 100];
 export const select: string = 'select';
+
 export const productsSelectorArr = [select, 'admin', 'moderator'];
 export type ISelect = 'select' | 'admin' | 'moderator';
-export const defaultProductsData: IProducts = {
+
+export const defaultProductStatus = 'coming-soon';
+export const productStatusOptions: IProduct['productStatus'][] = ['active', 'coming-soon', 'disabled', 'out-of-stock'];
+
+export const defaultProductsData: IProduct = {
   _id: '',
+  productUID: '',
   name: '',
-  email: '',
-  passCode: '',
-  alias: '',
-  role: select,
+  description: '',
+  image: {
+    imageFor: '',
+    imgURL: '',
+  } as IImage,
+  realPrice: 0,
+  discountPrice: 0,
+  reviews: [] as IReviewItem[],
+  color: '',
+  category: '',
+  pickupPoints: [] as IPickupPointItem[],
+  attributes: [] as IAttributeItem[],
+  productStatus: defaultProductStatus,
+  totalSells: 0,
+  shopsInfo: [] as IShopInfoItem[],
   createdAt: new Date(),
   updatedAt: new Date(),
 };
-export const baseIProducts: IProducts = {
+
+export const baseIProducts: IProduct = {
   ...defaultProductsData,
 };
