@@ -28,7 +28,7 @@ const Page = async () => {
       });
 
       const responseData = await response.json();
-      return responseData.data?.category_s;
+      return responseData.data?.clots;
     } catch (error) {
       console.error('Failed to fetch data:', error);
       return [];
@@ -36,14 +36,8 @@ const Page = async () => {
   };
   const data: IProduct[] = await fetchData();
   return (
-    <main className="w-full grid grid-cols-3 gap-6 p-4">
-      {data &&
-        data.length > 0 &&
-        data.map((i: IProduct, idx: number) => (
-          <div key={idx + (i.name || '')}>
-            <HomePageView product={i} />
-          </div>
-        ))}
+    <main className="w-full flex flex-col gap-2 p-1 md:p-4">
+      {data && data.length > 0 && data.map((i: IProduct, idx: number) => <HomePageView product={i} key={(i._id || '') + idx} />)}
     </main>
   );
 };

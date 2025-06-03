@@ -1,35 +1,35 @@
-// import { ICategory_s } from '@/app/api/v1/Category_s/filename7Model';
-import { ICategory_s } from '../api/v1/Model';
+// import { IClots } from '@/app/api/v1/Clots/filename7Model';
+import { IClots } from '../api/v1/Model';
 
-export interface Category_sStore {
+export interface ClotsStore {
   queryPramsLimit: number;
   queryPramsPage: number;
   queryPramsQ: string;
-  category_s: ICategory_s[];
-  selectedCategory_s: ICategory_s | null;
-  newCategory_s: Partial<ICategory_s>;
+  clots: IClots[];
+  selectedClots: IClots | null;
+  newClots: Partial<IClots>;
   isAddModalOpen: boolean;
   isViewModalOpen: boolean;
   isEditModalOpen: boolean;
   isDeleteModalOpen: boolean;
-  setNewCategory_s: React.Dispatch<React.SetStateAction<Partial<ICategory_s>>>;
+  setNewClots: React.Dispatch<React.SetStateAction<Partial<IClots>>>;
   isBulkEditModalOpen: boolean;
   isBulkUpdateModalOpen: boolean;
   isBulkDynamicUpdateModal: boolean;
   isBulkDeleteModalOpen: boolean;
-  bulkData: ICategory_s[];
+  bulkData: IClots[];
   setQueryPramsLimit: (payload: number) => void;
   setQueryPramsPage: (payload: number) => void;
   setQueryPramsQ: (payload: string) => void;
-  setCategory_s: (Category_s: ICategory_s[]) => void;
-  setSelectedCategory_s: (Category_s: ICategory_s | null) => void;
+  setClots: (Clots: IClots[]) => void;
+  setSelectedClots: (Clots: IClots | null) => void;
   toggleAddModal: (isOpen: boolean) => void;
   toggleViewModal: (isOpen: boolean) => void;
   toggleEditModal: (isOpen: boolean) => void;
   toggleDeleteModal: (isOpen: boolean) => void;
-  toggleBulkEditModal: (Category_s: boolean) => void;
-  toggleBulkUpdateModal: (Category_s: boolean) => void;
-  toggleBulkDynamicUpdateModal: (Category_s: boolean) => void;
-  toggleBulkDeleteModal: (Category_s: boolean) => void;
-  setBulkData: (bulkData: ICategory_s[]) => void;
+  toggleBulkEditModal: (Clots: boolean) => void;
+  toggleBulkUpdateModal: (Clots: boolean) => void;
+  toggleBulkDynamicUpdateModal: (Clots: boolean) => void;
+  toggleBulkDeleteModal: (Clots: boolean) => void;
+  setBulkData: (bulkData: IClots[]) => void;
 }

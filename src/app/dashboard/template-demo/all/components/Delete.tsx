@@ -11,35 +11,35 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { ICategory_s } from '../api/v1/Model';
-import { useCategory_sStore } from '../store/Store';
-import { baseICategory_s } from '../store/StoreConstants';
-import { useDeleteCategory_sMutation } from '../redux/rtk-Api';
+import { IClots } from '../api/v1/Model';
+import { useClotsStore } from '../store/Store';
+import { baseIClots } from '../store/StoreConstants';
+import { useDeleteClotsMutation } from '../redux/rtk-Api';
 
 import { handleSuccess } from './utils';
 
 const DeleteNextComponents: React.FC = () => {
-  const { toggleDeleteModal, isDeleteModalOpen, selectedCategory_s, setSelectedCategory_s } = useCategory_sStore();
-  const [deleteCategory_s] = useDeleteCategory_sMutation();
+  const { toggleDeleteModal, isDeleteModalOpen, selectedClots, setSelectedClots } = useClotsStore();
+  const [deleteClots] = useDeleteClotsMutation();
 
-  const handleDeleteCategory_s = async () => {
-    if (selectedCategory_s) {
+  const handleDeleteClots = async () => {
+    if (selectedClots) {
       try {
-        await deleteCategory_s({ id: selectedCategory_s._id }).unwrap();
+        await deleteClots({ id: selectedClots._id }).unwrap();
         toggleDeleteModal(false);
         handleSuccess('Delete Successful');
       } catch (error) {
-        console.error('Failed to delete Category_s:', error);
+        console.error('Failed to delete Clots:', error);
       }
     }
   };
 
   const handleCancel = () => {
     toggleDeleteModal(false);
-    setSelectedCategory_s({ ...baseICategory_s } as ICategory_s);
+    setSelectedClots({ ...baseIClots } as IClots);
   };
 
-  const { name = '' } = selectedCategory_s || {};
+  const { name = '' } = selectedClots || {};
 
   return (
     <Dialog open={isDeleteModalOpen} onOpenChange={toggleDeleteModal}>
@@ -47,10 +47,10 @@ const DeleteNextComponents: React.FC = () => {
         <DialogHeader>
           <DialogTitle>Confirm Deletion</DialogTitle>
         </DialogHeader>
-        {selectedCategory_s && (
+        {selectedClots && (
           <div className="py-4">
             <p>
-              You are about to delete Category_s: <span className="font-semibold">{(name as string) || ''}</span>
+              You are about to delete Clots: <span className="font-semibold">{(name as string) || ''}</span>
             </p>
           </div>
         )}
@@ -61,7 +61,7 @@ const DeleteNextComponents: React.FC = () => {
           <Button
             className="text-rose-400 hover:text-rose-500 cursor-pointer bg-rose-100 hover:bg-rose-200 border-1 border-rose-300 hover:border-rose-400 "
             variant="outline"
-            onClick={handleDeleteCategory_s}
+            onClick={handleDeleteClots}
           >
             Delete
           </Button>

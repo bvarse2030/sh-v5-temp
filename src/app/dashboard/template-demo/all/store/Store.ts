@@ -1,15 +1,15 @@
 import { create } from 'zustand';
-import { ICategory_s } from '../api/v1/Model';
-import { Category_sStore } from './StoreTypes';
-import { baseICategory_s, queryParams } from './StoreConstants';
+import { IClots } from '../api/v1/Model';
+import { ClotsStore } from './StoreTypes';
+import { baseIClots, queryParams } from './StoreConstants';
 
-export const useCategory_sStore = create<Category_sStore>(set => ({
+export const useClotsStore = create<ClotsStore>(set => ({
   queryPramsLimit: queryParams.limit,
   queryPramsPage: queryParams.page,
   queryPramsQ: queryParams.q,
-  category_s: [],
-  selectedCategory_s: null,
-  newCategory_s: baseICategory_s,
+  clots: [],
+  selectedClots: null,
+  newClots: baseIClots,
   isBulkEditModalOpen: false,
   isBulkDynamicUpdateModal: false,
   isBulkUpdateModalOpen: false,
@@ -22,12 +22,12 @@ export const useCategory_sStore = create<Category_sStore>(set => ({
   setQueryPramsLimit: (payload: number) => set({ queryPramsLimit: payload }),
   setQueryPramsPage: (payload: number) => set({ queryPramsPage: payload }),
   setQueryPramsQ: (payload: string) => set({ queryPramsQ: payload }),
-  setBulkData: (bulkData: ICategory_s[]) => set({ bulkData }),
-  setCategory_s: (category_s: ICategory_s[]) => set({ category_s }),
-  setSelectedCategory_s: Category_s => set({ selectedCategory_s: Category_s }),
-  setNewCategory_s: Category_s =>
+  setBulkData: (bulkData: IClots[]) => set({ bulkData }),
+  setClots: (clots: IClots[]) => set({ clots }),
+  setSelectedClots: Clots => set({ selectedClots: Clots }),
+  setNewClots: Clots =>
     set(state => ({
-      newCategory_s: typeof Category_s === 'function' ? Category_s(state.newCategory_s) : Category_s,
+      newClots: typeof Clots === 'function' ? Clots(state.newClots) : Clots,
     })),
   toggleAddModal: data => set({ isAddModalOpen: data }),
   toggleViewModal: data => set({ isViewModalOpen: data }),

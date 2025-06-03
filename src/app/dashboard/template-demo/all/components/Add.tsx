@@ -15,9 +15,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { useCategory_sStore } from '../store/Store';
-import { useAddCategory_sMutation } from '../redux/rtk-Api';
-import { defaultCategory_sData, select, ISelect, category_sSelectorArr } from '../store/StoreConstants';
+import { useClotsStore } from '../store/Store';
+import { useAddClotsMutation } from '../redux/rtk-Api';
+import { defaultClotsData, select, ISelect, clotsSelectorArr } from '../store/StoreConstants';
 
 import DataSelect from './DataSelect';
 import ImagesSelect from './ImagesSelect';
@@ -41,8 +41,8 @@ const InputField: React.FC<{
 );
 
 const AddNextComponents: React.FC = () => {
-  const { toggleAddModal, isAddModalOpen, newCategory_s, setNewCategory_s, setCategory_s } = useCategory_sStore();
-  const [addCategory_s, { isLoading }] = useAddCategory_sMutation();
+  const { toggleAddModal, isAddModalOpen, newClots, setNewClots, setClots } = useClotsStore();
+  const [addClots, { isLoading }] = useAddClotsMutation();
 
   const [newItemTags, setNewItemTags] = useState<string[]>([]);
   const [newImages, setNewImages] = useState<string[]>([]);
@@ -56,21 +56,21 @@ const AddNextComponents: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNewCategory_s({ ...newCategory_s, [name]: value });
+    setNewClots({ ...newClots, [name]: value });
   };
 
   const handleRoleChange = (value: string) => {
-    setNewCategory_s({ ...newCategory_s, role: value as ISelect });
+    setNewClots({ ...newClots, role: value as ISelect });
   };
 
-  const handleAddCategory_s = async () => {
-    const category_s = {
+  const handleAddClots = async () => {
+    const clots = {
       dataArr: newItemTags || [],
-      name: newCategory_s.name || '',
-      email: newCategory_s.email || '',
-      passCode: newCategory_s.passCode || '',
-      alias: newCategory_s.alias || '',
-      role: (newCategory_s.role as ISelect) || select,
+      name: newClots.name || '',
+      email: newClots.email || '',
+      passCode: newClots.passCode || '',
+      alias: newClots.alias || '',
+      role: (newClots.role as ISelect) || select,
       images: newImages || [],
       descriptions: descriptions || '',
       createdAt: new Date(),
@@ -78,10 +78,10 @@ const AddNextComponents: React.FC = () => {
     };
 
     try {
-      const addedCategory_s = await addCategory_s(category_s).unwrap(); // Get the returned data
-      setCategory_s([category_s, addedCategory_s]); // Use the returned data instead of the local `Category_s` object
+      const addedClots = await addClots(clots).unwrap(); // Get the returned data
+      setClots([clots, addedClots]); // Use the returned data instead of the local `Clots` object
       toggleAddModal(false);
-      setNewCategory_s(defaultCategory_sData);
+      setNewClots(defaultClotsData);
       handleSuccess('Added Successful');
     } catch (error: unknown) {
       console.log(error);
@@ -99,32 +99,32 @@ const AddNextComponents: React.FC = () => {
     <Dialog open={isAddModalOpen} onOpenChange={toggleAddModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Category_s</DialogTitle>
+          <DialogTitle>Add New Clots</DialogTitle>
         </DialogHeader>
 
         <ScrollArea className="h-[400px] w-full rounded-md border p-4">
           <div className="grid gap-4 py-4">
-            <InputField id="name" name="name" label="Name" value={(newCategory_s.name as string) || ''} onChange={handleInputChange} />
-            <InputField id="email" name="email" label="Email" type="email" value={(newCategory_s.email as string) || ''} onChange={handleInputChange} />
+            <InputField id="name" name="name" label="Name" value={(newClots.name as string) || ''} onChange={handleInputChange} />
+            <InputField id="email" name="email" label="Email" type="email" value={(newClots.email as string) || ''} onChange={handleInputChange} />
             <InputField
               id="passCode"
               name="passCode"
               label="Pass Code"
               type="password"
-              value={(newCategory_s.passCode as string) || ''}
+              value={(newClots.passCode as string) || ''}
               onChange={handleInputChange}
             />
-            <InputField id="alias" name="alias" label="Alias" value={(newCategory_s.alias as string) || ''} onChange={handleInputChange} />
+            <InputField id="alias" name="alias" label="Alias" value={(newClots.alias as string) || ''} onChange={handleInputChange} />
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="role" className="text-right">
                 Role
               </Label>
-              <Select onValueChange={handleRoleChange} defaultValue={(newCategory_s.role as string) || ''}>
+              <Select onValueChange={handleRoleChange} defaultValue={(newClots.role as string) || ''}>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
-                  {category_sSelectorArr?.map((i, index) => (
+                  {clotsSelectorArr?.map((i, index) => (
                     <SelectItem key={i + index} className="cursor-pointer" value={i}>
                       {i}
                     </SelectItem>
@@ -143,13 +143,8 @@ const AddNextComponents: React.FC = () => {
           <Button variant="outline" className="border-slate-500 hover:border-slate-600 border-1 cursor-pointer" onClick={() => toggleAddModal(false)}>
             Cancel
           </Button>
-          <Button
-            disabled={isLoading}
-            variant="outline"
-            className="border-slate-500 hover:border-slate-600 border-1 cursor-pointer"
-            onClick={handleAddCategory_s}
-          >
-            Add Category_s
+          <Button disabled={isLoading} variant="outline" className="border-slate-500 hover:border-slate-600 border-1 cursor-pointer" onClick={handleAddClots}>
+            Add Clots
           </Button>
         </DialogFooter>
       </DialogContent>

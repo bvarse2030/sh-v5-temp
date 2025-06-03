@@ -9,9 +9,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
+import HomePageView from '../ssr-view/HomePageView';
 import { IProduct } from '../../products/all/api/v1/Model';
-import HomePageView from './HomePageView';
 
 const Page = () => {
   const [data, setData] = useState([]);
@@ -33,20 +32,17 @@ const Page = () => {
         });
 
         const responseData = await response.json();
-        setData(responseData?.data?.category_s);
+        setData(responseData?.data?.clots);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
     };
     fetchData();
   }, []);
+
   return (
     <main className="w-full flex flex-col gap-2 p-1 md:p-4">
-      {data?.map((i: IProduct, idx: number) => (
-        <div key={idx + (i?.name || '')}>
-          <HomePageView product={i} />
-        </div>
-      ))}
+      {data && data.length > 0 && data.map((i: IProduct, idx: number) => <HomePageView product={i} key={(i._id || '') + idx} />)}
     </main>
   );
 };

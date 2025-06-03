@@ -9,9 +9,9 @@
 import { apiSlice } from '@/redux/api/apiSlice';
 
 // Use absolute paths with leading slash to ensure consistent behavior
-export const category_sApi = apiSlice.injectEndpoints({
+export const clotsApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    getCategory_s: builder.query({
+    getClots: builder.query({
       query: ({ page, limit, q }) => {
         let url = `/dashboard/template-demo/all/api/v1?page=${page || 1}&limit=${limit || 10}`;
         if (q) {
@@ -19,60 +19,60 @@ export const category_sApi = apiSlice.injectEndpoints({
         }
         return url;
       },
-      providesTags: [{ type: 'tagTypeCategory', id: 'LIST' }],
+      providesTags: [{ type: 'tagTypeClots', id: 'LIST' }],
     }),
-    getCategory_sById: builder.query({
+    getClotsById: builder.query({
       query: id => `/dashboard/template-demo/all/api/v1?id=${id}`,
     }),
-    addCategory_s: builder.mutation({
-      query: newCategory_s => ({
+    addClots: builder.mutation({
+      query: newClots => ({
         url: '/dashboard/template-demo/all/api/v1',
         method: 'POST',
-        body: newCategory_s,
+        body: newClots,
       }),
-      invalidatesTags: [{ type: 'tagTypeCategory' }],
+      invalidatesTags: [{ type: 'tagTypeClots' }],
     }),
-    updateCategory_s: builder.mutation({
+    updateClots: builder.mutation({
       query: ({ id, ...data }) => ({
         url: `/dashboard/template-demo/all/api/v1`,
         method: 'PUT',
         body: { id: id, ...data },
       }),
-      invalidatesTags: [{ type: 'tagTypeCategory' }],
+      invalidatesTags: [{ type: 'tagTypeClots' }],
     }),
-    deleteCategory_s: builder.mutation({
+    deleteClots: builder.mutation({
       query: ({ id }) => ({
         url: `/dashboard/template-demo/all/api/v1`,
         method: 'DELETE',
         body: { id },
       }),
-      invalidatesTags: [{ type: 'tagTypeCategory' }],
+      invalidatesTags: [{ type: 'tagTypeClots' }],
     }),
-    bulkUpdateCategory_s: builder.mutation({
+    bulkUpdateClots: builder.mutation({
       query: bulkData => ({
         url: `/dashboard/template-demo/all/api/v1?bulk=true`,
         method: 'PUT',
         body: bulkData,
       }),
-      invalidatesTags: [{ type: 'tagTypeCategory' }],
+      invalidatesTags: [{ type: 'tagTypeClots' }],
     }),
-    bulkDeleteCategory_s: builder.mutation({
+    bulkDeleteClots: builder.mutation({
       query: bulkData => ({
         url: `/dashboard/template-demo/all/api/v1?bulk=true`,
         method: 'DELETE',
         body: bulkData,
       }),
-      invalidatesTags: [{ type: 'tagTypeCategory' }],
+      invalidatesTags: [{ type: 'tagTypeClots' }],
     }),
   }),
 });
 
 export const {
-  useGetCategory_sQuery,
-  useAddCategory_sMutation,
-  useUpdateCategory_sMutation,
-  useDeleteCategory_sMutation,
-  useBulkUpdateCategory_sMutation,
-  useBulkDeleteCategory_sMutation,
-  useGetCategory_sByIdQuery,
-} = category_sApi;
+  useGetClotsQuery,
+  useAddClotsMutation,
+  useUpdateClotsMutation,
+  useDeleteClotsMutation,
+  useBulkUpdateClotsMutation,
+  useBulkDeleteClotsMutation,
+  useGetClotsByIdQuery,
+} = clotsApi;

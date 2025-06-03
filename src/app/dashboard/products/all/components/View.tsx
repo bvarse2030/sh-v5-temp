@@ -44,12 +44,6 @@ const ViewNextComponents: React.FC = () => {
       <div className="col-span-2">{value || 'N/A'}</div>
     </div>
   );
-  const DetailRowArray = ({ label, values }: { label: string; values: string[] }) => (
-    <div className="grid grid-cols-3 gap-2">
-      <div className="font-semibold">{label}:</div>
-      <div className="col-span-2">{values?.join(', ')}</div>
-    </div>
-  );
 
   return (
     <Dialog open={isViewModalOpen} onOpenChange={toggleViewModal}>

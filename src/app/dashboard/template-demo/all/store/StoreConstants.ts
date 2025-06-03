@@ -1,12 +1,12 @@
-import { ICategory_s } from '../api/v1/Model';
+import { IClots } from '../api/v1/Model';
 
-export const baseICategory_sPerPage = 2;
-export const queryParams = { q: '', page: 1, limit: baseICategory_sPerPage };
-export const pageLimitArr: number[] = [baseICategory_sPerPage, 10, 50, 100, 200];
+export const baseIClotsPerPage = 2;
+export const queryParams = { q: '', page: 1, limit: baseIClotsPerPage };
+export const pageLimitArr: number[] = [baseIClotsPerPage, 10, 50, 100, 200];
 export const select: string = 'select';
-export const category_sSelectorArr = [select, 'admin', 'moderator'];
+export const clotsSelectorArr = [select, 'admin', 'moderator'];
 export type ISelect = 'select' | 'admin' | 'moderator';
-export const defaultCategory_sData: ICategory_s = {
+export const defaultClotsData: IClots = {
   _id: '',
   name: '',
   email: '',
@@ -16,6 +16,6 @@ export const defaultCategory_sData: ICategory_s = {
   createdAt: new Date(),
   updatedAt: new Date(),
 };
-export const baseICategory_s: ICategory_s = {
-  ...defaultCategory_sData,
+export const baseIClots: IClots = {
+  ...defaultClotsData,
 };

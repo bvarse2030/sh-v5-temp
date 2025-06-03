@@ -8,20 +8,20 @@
 
 import { withDB } from '@/app/api/utils/db';
 
-import Category from './Model';
+import Clot from './Model';
 import { IResponse } from './jwt-verify';
 import { connectRedis, getRedisData } from './redis';
 
 // Helper to format responses
-const formatResponse = (data: unknown, message: string, status: number) => ({ data, message, status, success: status >= 200 && status < 300 });
+const formatResponse = (data: unknown, message: string, status: number) => ({ data, message, status, success: true });
 
-// CREATE Category
-export async function createCategory(req: Request): Promise<IResponse> {
+// CREATE Clot
+export async function createClot(req: Request): Promise<IResponse> {
   return withDB(async () => {
     try {
-      const categoryData = await req.json();
-      const newCategory = await Category.create({ ...categoryData });
-      return formatResponse(newCategory, 'Category created successfully', 201);
+      const clotData = await req.json();
+      const newClot = await Clot.create({ ...clotData });
+      return formatResponse(newClot, 'Clot created successfully', 201);
     } catch (error: unknown) {
       if ((error as { code?: number }).code === 11000) {
         const err = error as { keyValue?: Record<string, unknown> };
@@ -32,26 +32,26 @@ export async function createCategory(req: Request): Promise<IResponse> {
   });
 }
 
-// GET single Category by ID
-export async function getCategoryById(req: Request) {
+// GET single Clot by ID
+export async function getClotById(req: Request) {
   return withDB(async () => {
     const id = new URL(req.url).searchParams.get('id');
-    if (!id) return formatResponse(null, 'Category ID is required', 400);
+    if (!id) return formatResponse(null, 'Clot ID is required', 400);
 
-    const category = await Category.findById(id);
-    if (!category) return formatResponse(null, 'Category not found', 404);
+    const clot = await Clot.findById(id);
+    if (!clot) return formatResponse(null, 'Clot not found', 404);
 
-    return formatResponse(category, 'Category fetched successfully', 200);
+    return formatResponse(clot, 'Clot fetched successfully', 200);
   });
 }
 
-// GET all Category_s with pagination
-export async function getCategory_s(req: Request) {
+// GET all Clots with pagination
+export async function getClots(req: Request) {
   await connectRedis();
-  const getValue = await getRedisData('category_s');
+  const getValue = await getRedisData('clots');
   if (getValue) {
-    const { category_s, totalCategory_s, page, limit } = JSON.parse(getValue);
-    return formatResponse({ category_s: category_s || [], total: totalCategory_s, page, limit }, 'Category_s fetched successfully', 200);
+    const { clots, totalClots, page, limit } = JSON.parse(getValue);
+    return formatResponse({ clots: clots || [], total: totalClots, page, limit }, 'Clots fetched successfully', 200);
   } else {
     return withDB(async () => {
       const url = new URL(req.url);
@@ -74,24 +74,24 @@ export async function getCategory_s(req: Request) {
         };
       }
 
-      const category_s = await Category.find(searchFilter).sort({ updatedAt: -1, createdAt: -1 }).skip(skip).limit(limit);
+      const clots = await Clot.find(searchFilter).sort({ updatedAt: -1, createdAt: -1 }).skip(skip).limit(limit);
 
-      const totalCategory_s = await Category.countDocuments(searchFilter);
+      const totalClots = await Clot.countDocuments(searchFilter);
 
-      return formatResponse({ category_s: category_s || [], total: totalCategory_s, page, limit }, 'Category_s fetched successfully', 200);
+      return formatResponse({ clots: clots || [], total: totalClots, page, limit }, 'Clots fetched successfully', 200);
     });
   }
 }
 
-// UPDATE single Category by ID
-export async function updateCategory(req: Request) {
+// UPDATE single Clot by ID
+export async function updateClot(req: Request) {
   return withDB(async () => {
     try {
       const { id, ...updateData } = await req.json();
-      const updatedCategory = await Category.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+      const updatedClot = await Clot.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
 
-      if (!updatedCategory) return formatResponse(null, 'Category not found', 404);
-      return formatResponse(updatedCategory, 'Category updated successfully', 200);
+      if (!updatedClot) return formatResponse(null, 'Clot not found', 404);
+      return formatResponse(updatedClot, 'Clot updated successfully', 200);
     } catch (error: unknown) {
       if ((error as { code?: number }).code === 11000) {
         const err = error as { keyValue?: Record<string, unknown> };
@@ -102,35 +102,35 @@ export async function updateCategory(req: Request) {
   });
 }
 
-// BULK UPDATE Category_s
-export async function bulkUpdateCategory_s(req: Request) {
+// BULK UPDATE Clots
+export async function bulkUpdateClots(req: Request) {
   return withDB(async () => {
     const updates = await req.json();
     const results = await Promise.allSettled(
       updates.map(({ id, updateData }: { id: string; updateData: Record<string, unknown> }) =>
-        Category.findByIdAndUpdate(id, updateData, { new: true, runValidators: true }),
+        Clot.findByIdAndUpdate(id, updateData, { new: true, runValidators: true }),
       ),
     );
 
-    const successfulUpdates = results.filter(r => r.status === 'fulfilled' && r.value).map(r => (r as PromiseFulfilledResult<typeof Category>).value);
+    const successfulUpdates = results.filter(r => r.status === 'fulfilled' && r.value).map(r => (r as PromiseFulfilledResult<typeof Clot>).value);
     const failedUpdates = results.filter(r => r.status === 'rejected' || !r.value).map((_, i) => updates[i].id);
 
     return formatResponse({ updated: successfulUpdates, failed: failedUpdates }, 'Bulk update completed', 200);
   });
 }
 
-// DELETE single Category by ID
-export async function deleteCategory(req: Request) {
+// DELETE single Clot by ID
+export async function deleteClot(req: Request) {
   return withDB(async () => {
     const { id } = await req.json();
-    const deletedCategory = await Category.findByIdAndDelete(id);
-    if (!deletedCategory) return formatResponse(deletedCategory, 'Category not found', 404);
-    return formatResponse({ deletedCount: 1 }, 'Category deleted successfully', 200);
+    const deletedClot = await Clot.findByIdAndDelete(id);
+    if (!deletedClot) return formatResponse(deletedClot, 'Clot not found', 404);
+    return formatResponse({ deletedCount: 1 }, 'Clot deleted successfully', 200);
   });
 }
 
-// BULK DELETE Category_s
-export async function bulkDeleteCategory_s(req: Request) {
+// BULK DELETE Clots
+export async function bulkDeleteClots(req: Request) {
   return withDB(async () => {
     const { ids } = await req.json();
     const deletedIds: string[] = [];
@@ -138,10 +138,10 @@ export async function bulkDeleteCategory_s(req: Request) {
 
     for (const id of ids) {
       try {
-        const category = await Category.findById(id);
-        if (category) {
-          const deletedCategory = await Category.findByIdAndDelete(id);
-          if (deletedCategory) deletedIds.push(id);
+        const clot = await Clot.findById(id);
+        if (clot) {
+          const deletedClot = await Clot.findByIdAndDelete(id);
+          if (deletedClot) deletedIds.push(id);
         } else {
           invalidIds.push(id);
         }

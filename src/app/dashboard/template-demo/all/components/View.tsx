@@ -14,28 +14,28 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { ICategory_s } from '../api/v1/Model';
-import { useCategory_sStore } from '../store/Store';
-import { baseICategory_s } from '../store/StoreConstants';
-import { useGetCategory_sByIdQuery } from '../redux/rtk-Api';
+import { IClots } from '../api/v1/Model';
+import { useClotsStore } from '../store/Store';
+import { baseIClots } from '../store/StoreConstants';
+import { useGetClotsByIdQuery } from '../redux/rtk-Api';
 
 import { ViewRichText } from './view-rich-text/ViewRichText';
 
 const ViewNextComponents: React.FC = () => {
-  const { isViewModalOpen, selectedCategory_s, toggleViewModal, setSelectedCategory_s } = useCategory_sStore();
-  const { data: Category_sData, refetch } = useGetCategory_sByIdQuery(selectedCategory_s?._id, { skip: !selectedCategory_s?._id });
+  const { isViewModalOpen, selectedClots, toggleViewModal, setSelectedClots } = useClotsStore();
+  const { data: ClotsData, refetch } = useGetClotsByIdQuery(selectedClots?._id, { skip: !selectedClots?._id });
 
   useEffect(() => {
-    if (selectedCategory_s?._id) {
-      refetch(); // Fetch the latest Category_s data
+    if (selectedClots?._id) {
+      refetch(); // Fetch the latest Clots data
     }
-  }, [selectedCategory_s?._id, refetch]);
+  }, [selectedClots?._id, refetch]);
 
   useEffect(() => {
-    if (Category_sData?.data) {
-      setSelectedCategory_s(Category_sData.data); // Update selectedCategory_s with the latest data
+    if (ClotsData?.data) {
+      setSelectedClots(ClotsData.data); // Update selectedClots with the latest data
     }
-  }, [Category_sData, setSelectedCategory_s]);
+  }, [ClotsData, setSelectedClots]);
 
   const formatDate = (date?: Date) => (date ? format(date, 'MMM dd, yyyy') : 'N/A');
 
@@ -56,40 +56,40 @@ const ViewNextComponents: React.FC = () => {
     <Dialog open={isViewModalOpen} onOpenChange={toggleViewModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Category_s Details</DialogTitle>
+          <DialogTitle>Clots Details</DialogTitle>
         </DialogHeader>
-        {selectedCategory_s && (
+        {selectedClots && (
           <ScrollArea className="h-[400px] w-full rounded-md border p-4">
             <div className="w-full flex flex-col">
               <div className="grid gap-2">
-                <DetailRow label="Name" value={selectedCategory_s.name as string} />
-                <DetailRow label="Email" value={selectedCategory_s.email as string} />
-                <DetailRow label="Pass Code" value={selectedCategory_s.passCode as string} />
-                <DetailRow label="Alias" value={selectedCategory_s.alias as string} />
+                <DetailRow label="Name" value={selectedClots.name as string} />
+                <DetailRow label="Email" value={selectedClots.email as string} />
+                <DetailRow label="Pass Code" value={selectedClots.passCode as string} />
+                <DetailRow label="Alias" value={selectedClots.alias as string} />
                 <DetailRow
                   label="Role"
                   value={
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        selectedCategory_s.role === 'admin'
+                        selectedClots.role === 'admin'
                           ? 'bg-amber-100 text-amber-700'
-                          : selectedCategory_s.role === 'moderator'
+                          : selectedClots.role === 'moderator'
                           ? 'bg-blue-100 text-blue-700'
                           : 'bg-green-100 text-green-700'
                       }`}
                     >
-                      {selectedCategory_s.role as string}
+                      {selectedClots.role as string}
                     </span>
                   }
                 />
-                <DetailRowArray label="Data Array" values={selectedCategory_s.dataArr as string[]} />
-                <DetailRow label="Created At" value={formatDate(selectedCategory_s.createdAt)} />
-                <DetailRow label="Updated At" value={formatDate(selectedCategory_s.updatedAt)} />
+                <DetailRowArray label="Data Array" values={selectedClots.dataArr as string[]} />
+                <DetailRow label="Created At" value={formatDate(selectedClots.createdAt)} />
+                <DetailRow label="Updated At" value={formatDate(selectedClots.updatedAt)} />
               </div>
               <div className="w-full flex items-center justify-center mt-2 min-h-[10vh]">
-                {Array.isArray(selectedCategory_s.images) && selectedCategory_s.images?.length > 0 ? (
+                {Array.isArray(selectedClots.images) && selectedClots.images?.length > 0 ? (
                   <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-1">
-                    {selectedCategory_s.images.map((i, index) => (
+                    {selectedClots.images.map((i, index) => (
                       <div
                         key={index + i}
                         className={`relative w-full h-[150px] border-1 border-slate-300 shadow-xl hover:shadow-2xl cursor-pointer hover:border-slate-600 flex items-center justify-center rounded-lg overflow-hidden`}
@@ -105,7 +105,7 @@ const ViewNextComponents: React.FC = () => {
                 )}
               </div>
               <div className="w-full m-2" />
-              <ViewRichText data={selectedCategory_s.descriptions || ''} />
+              <ViewRichText data={selectedClots.descriptions || ''} />
             </div>
           </ScrollArea>
         )}
@@ -114,7 +114,7 @@ const ViewNextComponents: React.FC = () => {
             className="cursor-pointer border-1 border-slate-400 hover:border-slate-500"
             onClick={() => {
               toggleViewModal(false);
-              setSelectedCategory_s({ ...baseICategory_s } as ICategory_s);
+              setSelectedClots({ ...baseIClots } as IClots);
             }}
           >
             Close

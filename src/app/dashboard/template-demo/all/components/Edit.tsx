@@ -15,10 +15,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { ICategory_s } from '../api/v1/Model';
-import { useCategory_sStore } from '../store/Store';
-import { useUpdateCategory_sMutation } from '../redux/rtk-Api';
-import { ISelect, category_sSelectorArr, baseICategory_s } from '../store/StoreConstants';
+import { IClots } from '../api/v1/Model';
+import { useClotsStore } from '../store/Store';
+import { useUpdateClotsMutation } from '../redux/rtk-Api';
+import { ISelect, clotsSelectorArr, baseIClots } from '../store/StoreConstants';
 
 import DataSelect from './DataSelect';
 import ImagesSelect from './ImagesSelect';
@@ -28,34 +28,34 @@ import { formatDuplicateKeyError, handleError, handleSuccess, isApiErrorResponse
 const EditNextComponents: React.FC = () => {
   const [newItemTags, setNewItemTags] = useState<string[]>([]);
   const [newImages, setNewImages] = useState<string[]>([]);
-  const { toggleEditModal, isEditModalOpen, newCategory_s, selectedCategory_s, setNewCategory_s, setSelectedCategory_s } = useCategory_sStore();
-  const [updateCategory_s] = useUpdateCategory_sMutation();
+  const { toggleEditModal, isEditModalOpen, newClots, selectedClots, setNewClots, setSelectedClots } = useClotsStore();
+  const [updateClots] = useUpdateClotsMutation();
   const [descriptions, setDescriptions] = useState('');
 
   const onChange = (content: string) => {
     setDescriptions(content);
   };
   useEffect(() => {
-    if (selectedCategory_s) {
-      setNewCategory_s(selectedCategory_s);
-      setNewItemTags(selectedCategory_s.dataArr as string[]);
-      setNewImages(selectedCategory_s.images as string[]);
+    if (selectedClots) {
+      setNewClots(selectedClots);
+      setNewItemTags(selectedClots.dataArr as string[]);
+      setNewImages(selectedClots.images as string[]);
     }
-  }, [selectedCategory_s, setNewCategory_s]);
+  }, [selectedClots, setNewClots]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNewCategory_s({ ...newCategory_s, [name]: value });
+    setNewClots({ ...newClots, [name]: value });
   };
   const handleRoleChange = (value: string) => {
-    setNewCategory_s({ ...newCategory_s, role: value as ISelect });
+    setNewClots({ ...newClots, role: value as ISelect });
   };
 
   const handleEditNextComponents = async () => {
-    if (!selectedCategory_s) return;
+    if (!selectedClots) return;
 
     try {
-      const updateData = { ...newCategory_s, dataArr: newItemTags, images: newImages };
-      await updateCategory_s({ id: selectedCategory_s._id, ...updateData }).unwrap(); // Call RTK mutation
+      const updateData = { ...newClots, dataArr: newItemTags, images: newImages };
+      await updateClots({ id: selectedClots._id, ...updateData }).unwrap(); // Call RTK mutation
       toggleEditModal(false);
       handleSuccess('Edit Successful');
     } catch (error: unknown) {
@@ -73,7 +73,7 @@ const EditNextComponents: React.FC = () => {
     <Dialog open={isEditModalOpen} onOpenChange={toggleEditModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Category_s</DialogTitle>
+          <DialogTitle>Edit Clots</DialogTitle>
         </DialogHeader>
         <ScrollArea className="h-[400px] w-full rounded-md border p-4">
           <div className="grid gap-4 py-4">
@@ -81,20 +81,13 @@ const EditNextComponents: React.FC = () => {
               <Label htmlFor="edit-name" className="text-right">
                 Name
               </Label>
-              <Input id="edit-name" name="name" value={(newCategory_s.name as string) || ''} onChange={handleInputChange} className="col-span-3" />
+              <Input id="edit-name" name="name" value={(newClots.name as string) || ''} onChange={handleInputChange} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="edit-email" className="text-right">
                 Email
               </Label>
-              <Input
-                id="edit-email"
-                name="email"
-                type="email"
-                value={(newCategory_s.email as string) || ''}
-                onChange={handleInputChange}
-                className="col-span-3"
-              />
+              <Input id="edit-email" name="email" type="email" value={(newClots.email as string) || ''} onChange={handleInputChange} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="edit-passCode" className="text-right">
@@ -104,7 +97,7 @@ const EditNextComponents: React.FC = () => {
                 id="edit-passCode"
                 name="passCode"
                 type="password"
-                value={(newCategory_s.passCode as string) || ''}
+                value={(newClots.passCode as string) || ''}
                 onChange={handleInputChange}
                 className="col-span-3"
               />
@@ -113,19 +106,19 @@ const EditNextComponents: React.FC = () => {
               <Label htmlFor="edit-alias" className="text-right">
                 Alias
               </Label>
-              <Input id="edit-alias" name="alias" value={(newCategory_s.alias as string) || ''} onChange={handleInputChange} className="col-span-3" />
+              <Input id="edit-alias" name="alias" value={(newClots.alias as string) || ''} onChange={handleInputChange} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="edit-role" className="text-right">
                 Role
               </Label>
 
-              <Select onValueChange={handleRoleChange} defaultValue={(newCategory_s.role as string) || ''}>
+              <Select onValueChange={handleRoleChange} defaultValue={(newClots.role as string) || ''}>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
-                  {category_sSelectorArr?.map((i, index) => (
+                  {clotsSelectorArr?.map((i, index) => (
                     <SelectItem key={i + index} className="cursor-pointer " value={i}>
                       {i}
                     </SelectItem>
@@ -146,7 +139,7 @@ const EditNextComponents: React.FC = () => {
             variant="outline"
             onClick={() => {
               toggleEditModal(false);
-              setSelectedCategory_s({ ...baseICategory_s } as ICategory_s);
+              setSelectedClots({ ...baseIClots } as IClots);
             }}
           >
             Cancel

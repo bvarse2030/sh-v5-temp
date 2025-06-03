@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { IProduct } from '../api/v1/Model';
 import { useProductsStore } from '../store/Store';
 import { useUpdateProductsMutation } from '../redux/rtk-Api';
-import { ISelect, productsSelectorArr, baseIProducts } from '../store/StoreConstants';
+import { productsSelectorArr, baseIProducts } from '../store/StoreConstants';
 
 import DataSelect from './DataSelect';
 import ImagesSelect from './ImagesSelect';
@@ -44,7 +44,7 @@ const EditNextComponents: React.FC = () => {
     const { name, value } = e.target;
     setNewProducts({ ...newProducts, [name]: value });
   };
-  const handleRoleChange = (value: string) => {
+  const handleRoleChange = () => {
     setNewProducts({ ...newProducts });
   };
 

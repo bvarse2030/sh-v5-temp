@@ -22,23 +22,23 @@ import ViewFilename8 from './components/View';
 import SearchBox from './components/SearchBox';
 import DeleteFilename8 from './components/Delete';
 import BulkEditFilename8 from './components/BulkEdit';
-import { useCategory_sStore } from './store/Store';
+import { useClotsStore } from './store/Store';
 import TooManyRequests from './components/TooManyRequest';
 import BulkDeleteFilename8 from './components/BulkDelete';
-import { useGetCategory_sQuery } from './redux/rtk-Api';
-import ViewCategory_sTable from './components/ViewTable';
-import BulkUpdateCategory_s from './components/BulkUpdate';
-import BulkDynamicUpdateCategory_s from './components/BulkDynamicUpdate';
+import { useGetClotsQuery } from './redux/rtk-Api';
+import ViewClotsTable from './components/ViewTable';
+import BulkUpdateClots from './components/BulkUpdate';
+import BulkDynamicUpdateClots from './components/BulkDynamicUpdate';
 
 const MainNextPage: React.FC = () => {
   const [hashSearchText, setHashSearchText] = useState('');
-  const { toggleAddModal, queryPramsLimit, queryPramsPage, queryPramsQ, setQueryPramsPage, setQueryPramsQ } = useCategory_sStore();
+  const { toggleAddModal, queryPramsLimit, queryPramsPage, queryPramsQ, setQueryPramsPage, setQueryPramsQ } = useClotsStore();
 
   const {
     data: getResponseData,
     isSuccess,
     status: statusCode,
-  } = useGetCategory_sQuery(
+  } = useGetClotsQuery(
     { q: queryPramsQ, page: queryPramsPage, limit: queryPramsLimit },
     {
       selectFromResult: ({ data, isSuccess, status, error }) => ({
@@ -58,22 +58,13 @@ const MainNextPage: React.FC = () => {
     }
   };
 
-  const modals = [
-    AddFilename8,
-    ViewFilename8,
-    BulkDeleteFilename8,
-    BulkEditFilename8,
-    EditFilename8,
-    DeleteFilename8,
-    BulkUpdateCategory_s,
-    BulkDynamicUpdateCategory_s,
-  ];
+  const modals = [AddFilename8, ViewFilename8, BulkDeleteFilename8, BulkEditFilename8, EditFilename8, DeleteFilename8, BulkUpdateClots, BulkDynamicUpdateClots];
   const router = useRouter();
 
   let renderUI = (
     <div className="container mx-auto p-4">
       <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-6">
-        <h1 className="h2 w-full">Category Management {isSuccess && <sup className="text-xs">(total:{getResponseData?.data?.total || '00'})</sup>}</h1>
+        <h1 className="h2 w-full">Clot Management {isSuccess && <sup className="text-xs">(total:{getResponseData?.data?.total || '00'})</sup>}</h1>
         <div className="w-full flex flex-col md:flex-row gap-2 item-center justify-end">
           <Button size="sm" variant="outlineGarden" onClick={() => router.push('/dashboard/template-demo/ssr-view')}>
             <BiRightArrowAlt className="w-4 h-4" />
@@ -85,12 +76,12 @@ const MainNextPage: React.FC = () => {
           </Button>
           <Button size="sm" variant="outlineGarden" onClick={() => toggleAddModal(true)}>
             <PlusIcon className="w-4 h-4" />
-            Add Category
+            Add Clot
           </Button>
         </div>
       </div>
       <SearchBox onSearch={handleSearch} placeholder="Search here ..." autoFocus={false} />
-      <ViewCategory_sTable />
+      <ViewClotsTable />
       {modals.map((ModalComponent, index) => (
         <ModalComponent key={index} />
       ))}

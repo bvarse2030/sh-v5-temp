@@ -7,9 +7,9 @@
 */
 
 import mongoose, { Schema } from 'mongoose';
-import { category_sSelectorArr, select } from '../../store/StoreConstants';
+import { clotsSelectorArr, select } from '../../store/StoreConstants';
 
-const categorySchema = new Schema(
+const clotSchema = new Schema(
   {
     name: { type: String, required: true },
     dataArr: [{ type: String, required: false }],
@@ -23,7 +23,7 @@ const categorySchema = new Schema(
     alias: { type: String, required: true },
     role: {
       type: String,
-      enum: category_sSelectorArr,
+      enum: clotsSelectorArr,
       default: select,
     },
     images: [{ type: String }],
@@ -32,9 +32,9 @@ const categorySchema = new Schema(
   { timestamps: true },
 );
 
-export default mongoose.models.Category || mongoose.model('Category', categorySchema);
+export default mongoose.models.Clot || mongoose.model('Clot', clotSchema);
 
-export interface ICategory_s {
+export interface IClots {
   name: string;
   dataArr?: string[];
   email: string;

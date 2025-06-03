@@ -11,28 +11,28 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { useCategory_sStore } from '../store/Store';
-import { useBulkUpdateCategory_sMutation } from '../redux/rtk-Api';
+import { useClotsStore } from '../store/Store';
+import { useBulkUpdateClotsMutation } from '../redux/rtk-Api';
 
 import { handleSuccess } from './utils';
 import DynamicDataSelect from './DynamicDataSelect';
 
 const BulkDynamicUpdateNextComponents: React.FC = () => {
   const [newItemTags, setNewItemTags] = useState<string[]>([]);
-  const { toggleBulkDynamicUpdateModal, isBulkDynamicUpdateModal, bulkData, setBulkData } = useCategory_sStore();
-  const [bulkUpdateCategory_s, { isLoading }] = useBulkUpdateCategory_sMutation();
+  const { toggleBulkDynamicUpdateModal, isBulkDynamicUpdateModal, bulkData, setBulkData } = useClotsStore();
+  const [bulkUpdateClots, { isLoading }] = useBulkUpdateClotsMutation();
 
-  const handleBulkEditCategory_s = async () => {
+  const handleBulkEditClots = async () => {
     if (!bulkData.length) return;
     try {
       const newBulkData = bulkData.map(({ _id, ...rest }) => ({ id: _id, updateData: { ...rest, dataArr: newItemTags } }));
 
-      await bulkUpdateCategory_s(newBulkData).unwrap();
+      await bulkUpdateClots(newBulkData).unwrap();
       toggleBulkDynamicUpdateModal(false);
       setBulkData([]);
       handleSuccess('Update Successful');
     } catch (error) {
-      console.error('Failed to edit category_s:', error);
+      console.error('Failed to edit clots:', error);
     }
   };
 
@@ -45,7 +45,7 @@ const BulkDynamicUpdateNextComponents: React.FC = () => {
         {bulkData.length > 0 && (
           <div>
             <p className="pt-2">
-              You are about to update <span className="font-semibold">({bulkData.length})</span> category_s
+              You are about to update <span className="font-semibold">({bulkData.length})</span> clots
             </p>
             <div className="w-full flex items-center justify-between pt-2">
               <DynamicDataSelect label="Update all data as" newItemTags={newItemTags as string[]} setNewItemTags={setNewItemTags} />
@@ -54,13 +54,13 @@ const BulkDynamicUpdateNextComponents: React.FC = () => {
         )}
         <ScrollArea className="h-[400px] w-full rounded-md border p-4">
           <div className="flex flex-col gap-2">
-            {bulkData.map((Category_s, idx) => (
-              <div key={(Category_s._id as string) || idx} className="flex items-start mb-2 justify-between flex-col">
+            {bulkData.map((Clots, idx) => (
+              <div key={(Clots._id as string) || idx} className="flex items-start mb-2 justify-between flex-col">
                 <div className="flex flex-col">
                   <span>
-                    {idx + 1}. {(Category_s.name as string) || ''}
+                    {idx + 1}. {(Clots.name as string) || ''}
                   </span>
-                  {/* <span className="text-xs mt-0">{Array.isArray(Category_s.dataArr) ? category_s.dataArr.join(', ') : ''}</span> */}
+                  {/* <span className="text-xs mt-0">{Array.isArray(Clots.dataArr) ? clots.dataArr.join(', ') : ''}</span> */}
                   <span className="text-xs mt-0">{newItemTags.join(', ') || ''}</span>
                 </div>
               </div>
@@ -74,7 +74,7 @@ const BulkDynamicUpdateNextComponents: React.FC = () => {
           <Button
             disabled={isLoading}
             variant="outline"
-            onClick={handleBulkEditCategory_s}
+            onClick={handleBulkEditClots}
             className="text-green-400 hover:text-green-500 cursor-pointer bg-green-100 hover:bg-green-200 border-1 border-green-300 hover:border-green-400"
           >
             Update Selected
