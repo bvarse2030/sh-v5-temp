@@ -25,7 +25,7 @@ const Page = () => {
           return;
         }
 
-        const url = `https://b-varse.vercel.app/dashboard/template-demo/all/api/v1?id=${id}`;
+        const url = `https://sh-v7.vercel.app/dashboard/template-demo/all/api/v1?id=${id}`;
         if (url) {
           try {
             const response = await fetch(url, {

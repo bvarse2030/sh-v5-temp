@@ -28,7 +28,7 @@ const DataDetails = async ({ data }: { data: { name: string; _id: string } }) =>
 };
 
 const getDataById = async (id: string): Promise<ApiResponse> => {
-  const backendUrl = `https://b-varse.vercel.app/dashboard/template-demo/all/api/v1?id=${id}`;
+  const backendUrl = `https://sh-v7.vercel.app/dashboard/template-demo/all/api/v1?id=${id}`;
 
   try {
     const res = await fetch(backendUrl, { next: { revalidate: 3600 } }); // 60 minutes (3600 seconds)

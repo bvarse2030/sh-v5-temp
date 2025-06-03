@@ -10,7 +10,8 @@
 
 import { useEffect, useState } from 'react';
 
-import CustomLInk from './CustomButton';
+import { IProduct } from '../../products/all/api/v1/Model';
+import HomePageView from './HomePageView';
 
 const Page = () => {
   const [data, setData] = useState([]);
@@ -21,7 +22,7 @@ const Page = () => {
         console.error('Authentication token not found. Unable to fetch data.');
         return;
       }
-      const url = 'https://b-varse.vercel.app/dashboard/template-demo/all/api/v1?page=1&limit=4';
+      const url = 'https://sh-v7.vercel.app/dashboard/template-demo/all/api/v1?page=1&limit=4';
 
       try {
         const response = await fetch(url, {
@@ -41,9 +42,9 @@ const Page = () => {
   }, []);
   return (
     <main className="w-full flex flex-col gap-2 p-1 md:p-4">
-      {data?.map((i: { name: string; _id: string }, idx: number) => (
-        <div key={idx + i?.name}>
-          <CustomLInk name={i.name} url={`/dashboard/template-demo/client-view/details/${i._id}`} />
+      {data?.map((i: IProduct, idx: number) => (
+        <div key={idx + (i?.name || '')}>
+          <HomePageView product={i} />
         </div>
       ))}
     </main>
