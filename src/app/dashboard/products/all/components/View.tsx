@@ -6,7 +6,6 @@
 |-----------------------------------------
 */
 
-import Image from 'next/image';
 import { format } from 'date-fns';
 import React, { useEffect } from 'react';
 
@@ -14,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { IProducts } from '../api/v1/Model';
+import { IProduct } from '../api/v1/Model';
 import { useProductsStore } from '../store/Store';
 import { baseIProducts } from '../store/StoreConstants';
 import { useGetProductsByIdQuery } from '../redux/rtk-Api';
@@ -63,49 +62,28 @@ const ViewNextComponents: React.FC = () => {
             <div className="w-full flex flex-col">
               <div className="grid gap-2">
                 <DetailRow label="Name" value={selectedProducts.name as string} />
-                <DetailRow label="Email" value={selectedProducts.email as string} />
-                <DetailRow label="Pass Code" value={selectedProducts.passCode as string} />
-                <DetailRow label="Alias" value={selectedProducts.alias as string} />
                 <DetailRow
                   label="Role"
                   value={
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        selectedProducts.role === 'admin'
+                        selectedProducts.name === 'admin'
                           ? 'bg-amber-100 text-amber-700'
-                          : selectedProducts.role === 'moderator'
+                          : selectedProducts.name === 'moderator'
                           ? 'bg-blue-100 text-blue-700'
                           : 'bg-green-100 text-green-700'
                       }`}
                     >
-                      {selectedProducts.role as string}
+                      {selectedProducts.name as string}
                     </span>
                   }
                 />
-                <DetailRowArray label="Data Array" values={selectedProducts.dataArr as string[]} />
                 <DetailRow label="Created At" value={formatDate(selectedProducts.createdAt)} />
                 <DetailRow label="Updated At" value={formatDate(selectedProducts.updatedAt)} />
               </div>
-              <div className="w-full flex items-center justify-center mt-2 min-h-[10vh]">
-                {Array.isArray(selectedProducts.images) && selectedProducts.images?.length > 0 ? (
-                  <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-1">
-                    {selectedProducts.images.map((i, index) => (
-                      <div
-                        key={index + i}
-                        className={`relative w-full h-[150px] border-1 border-slate-300 shadow-xl hover:shadow-2xl cursor-pointer hover:border-slate-600 flex items-center justify-center rounded-lg overflow-hidden`}
-                      >
-                        <Image src={i} fill alt="Media" objectFit="cover" />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex flex-col w-full items-center justify-center">
-                    <p>Ops! there is no Image</p>
-                  </div>
-                )}
-              </div>
+
               <div className="w-full m-2" />
-              <ViewRichText data={selectedProducts.descriptions || ''} />
+              <ViewRichText data={selectedProducts.name || ''} />
             </div>
           </ScrollArea>
         )}
@@ -114,7 +92,7 @@ const ViewNextComponents: React.FC = () => {
             className="cursor-pointer border-1 border-slate-400 hover:border-slate-500"
             onClick={() => {
               toggleViewModal(false);
-              setSelectedProducts({ ...baseIProducts } as IProducts);
+              setSelectedProducts({ ...baseIProducts } as IProduct);
             }}
           >
             Close

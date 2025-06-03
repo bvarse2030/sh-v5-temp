@@ -10,7 +10,7 @@ import { withDB } from '@/app/api/utils/db';
 
 import ProductModel, { IProduct } from './Model';
 import { IResponse } from './jwt-verify';
-import { connectRedis, getRedisData, setRedisData } from './redis';
+import { setRedisData } from './redis';
 import mongoose from 'mongoose';
 
 const formatResponse = (data: unknown, message: string, status: number): IResponse => ({
@@ -167,7 +167,7 @@ export async function updateProduct(req: Request) {
       }
       return formatResponse(updatedProduct.toObject(), 'Product updated successfully', 200);
     } catch (error: unknown) {
-      const e = error as { code?: number; message?: string; keyValue?: Record<string, unknown>; errors?: any };
+      const e = error as { code?: number; message?: string; keyValue?: Record<string, unknown>; errors?: string };
       if (e.code === 11000) {
         return formatResponse(null, `Update failed: ${JSON.stringify(e.keyValue)} already exists.`, 409);
       }
@@ -211,7 +211,7 @@ export async function bulkUpdateProducts(req: Request) {
         return formatResponse(null, 'No valid update operations to perform.', 400);
       }
 
-      const result = await ProductModel.bulkWrite(bulkOps as any, { ordered: false });
+      const result = await ProductModel.bulkWrite(bulkOps, { ordered: false });
 
       return formatResponse(
         {

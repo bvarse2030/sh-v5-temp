@@ -15,7 +15,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { IProducts } from '../api/v1/Model';
+import { IProduct } from '../api/v1/Model';
 import { useProductsStore } from '../store/Store';
 import { useUpdateProductsMutation } from '../redux/rtk-Api';
 import { ISelect, productsSelectorArr, baseIProducts } from '../store/StoreConstants';
@@ -38,8 +38,6 @@ const EditNextComponents: React.FC = () => {
   useEffect(() => {
     if (selectedProducts) {
       setNewProducts(selectedProducts);
-      setNewItemTags(selectedProducts.dataArr as string[]);
-      setNewImages(selectedProducts.images as string[]);
     }
   }, [selectedProducts, setNewProducts]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +45,7 @@ const EditNextComponents: React.FC = () => {
     setNewProducts({ ...newProducts, [name]: value });
   };
   const handleRoleChange = (value: string) => {
-    setNewProducts({ ...newProducts, role: value as ISelect });
+    setNewProducts({ ...newProducts });
   };
 
   const handleEditNextComponents = async () => {
@@ -87,14 +85,7 @@ const EditNextComponents: React.FC = () => {
               <Label htmlFor="edit-email" className="text-right">
                 Email
               </Label>
-              <Input
-                id="edit-email"
-                name="email"
-                type="email"
-                value={(newProducts.email as string) || ''}
-                onChange={handleInputChange}
-                className="col-span-3"
-              />
+              <Input id="edit-email" name="email" type="email" value={(newProducts.name as string) || ''} onChange={handleInputChange} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="edit-passCode" className="text-right">
@@ -104,7 +95,7 @@ const EditNextComponents: React.FC = () => {
                 id="edit-passCode"
                 name="passCode"
                 type="password"
-                value={(newProducts.passCode as string) || ''}
+                value={(newProducts.name as string) || ''}
                 onChange={handleInputChange}
                 className="col-span-3"
               />
@@ -113,14 +104,14 @@ const EditNextComponents: React.FC = () => {
               <Label htmlFor="edit-alias" className="text-right">
                 Alias
               </Label>
-              <Input id="edit-alias" name="alias" value={(newProducts.alias as string) || ''} onChange={handleInputChange} className="col-span-3" />
+              <Input id="edit-alias" name="alias" value={(newProducts.name as string) || ''} onChange={handleInputChange} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="edit-role" className="text-right">
                 Role
               </Label>
 
-              <Select onValueChange={handleRoleChange} defaultValue={(newProducts.role as string) || ''}>
+              <Select onValueChange={handleRoleChange} defaultValue={(newProducts.name as string) || ''}>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
@@ -146,7 +137,7 @@ const EditNextComponents: React.FC = () => {
             variant="outline"
             onClick={() => {
               toggleEditModal(false);
-              setSelectedProducts({ ...baseIProducts } as IProducts);
+              setSelectedProducts({ ...baseIProducts } as IProduct);
             }}
           >
             Cancel

@@ -13,7 +13,7 @@ import { IResponse } from './jwt-verify';
 import { connectRedis, getRedisData } from './redis';
 
 // Helper to format responses
-const formatResponse = (data: unknown, message: string, status: number) => ({ data, message, status });
+const formatResponse = (data: unknown, message: string, status: number) => ({ data, message, status, success: status >= 200 && status < 300 });
 
 // CREATE GAuthUser
 export async function createGAuthUser(req: Request): Promise<IResponse> {

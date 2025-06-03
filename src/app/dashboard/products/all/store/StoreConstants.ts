@@ -1,5 +1,4 @@
-import { IProduct, IImage, IReviewItem, IPickupPointItem, IAttributeItem, IShopInfoItem } from '../api/v1/Model'; // Ensure this path and these imports are correct for your project structure
-import mongoose from 'mongoose'; // Needed for mongoose.Types.ObjectId if used directly
+import { IProduct, IImage, IReviewItem, IPickupPointItem, IAttributeItem, IShopInfoItem } from '../api/v1/Model';
 
 export const baseIProductsPerPage = 2;
 export const queryParams = { q: '', page: 1, limit: baseIProductsPerPage, category: '', status: '', sortBy: 'updatedAt', sortOrder: 'desc' };

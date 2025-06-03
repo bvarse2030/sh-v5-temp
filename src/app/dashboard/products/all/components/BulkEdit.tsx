@@ -14,7 +14,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { IProducts } from '../api/v1/Model';
+import { IProduct } from '../api/v1/Model';
 import { useProductsStore } from '../store/Store';
 import { productsSelectorArr } from '../store/StoreConstants';
 import { useBulkUpdateProductsMutation } from '../redux/rtk-Api';
@@ -39,7 +39,7 @@ const BulkEditNextComponents: React.FC = () => {
   };
 
   const handleRoleChange = (ProductsId: string, role: string) => {
-    setBulkData(bulkData.map(Products => (Products._id === ProductsId ? { ...Products, role } : Products)) as IProducts[]);
+    setBulkData(bulkData.map(Products => (Products._id === ProductsId ? { ...Products, role } : Products)) as IProduct[]);
   };
 
   return (
@@ -62,7 +62,7 @@ const BulkEditNextComponents: React.FC = () => {
                 </span>
                 <div className="flex items-center gap-4 min-w-[180px]">
                   <Label htmlFor="edit-role">Role</Label>
-                  <Select onValueChange={role => handleRoleChange(Products._id as string, role)} defaultValue={(Products.role as string) || ''}>
+                  <Select onValueChange={role => handleRoleChange(Products._id as string, role)} defaultValue={(Products.productStatus as string) || ''}>
                     <SelectTrigger className="bg-slate-50">
                       <SelectValue placeholder="Select a role" />
                     </SelectTrigger>

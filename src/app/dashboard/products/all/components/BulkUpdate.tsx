@@ -13,7 +13,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { IProducts } from '../api/v1/Model';
+import { IProduct } from '../api/v1/Model';
 import { useProductsStore } from '../store/Store';
 import { productsSelectorArr } from '../store/StoreConstants';
 import { useBulkUpdateProductsMutation } from '../redux/rtk-Api';
@@ -38,7 +38,7 @@ const BulkUpdateNextComponents: React.FC = () => {
   };
 
   const handleRoleChangeForAll = (role: string) => {
-    setBulkData(bulkData.map(Products => ({ ...Products, role })) as IProducts[]);
+    setBulkData(bulkData.map(Products => ({ ...Products, role })) as IProduct[]);
   };
 
   return (
@@ -76,7 +76,7 @@ const BulkUpdateNextComponents: React.FC = () => {
                 <span>
                   {idx + 1}. {(Products.name as string) || ''}
                 </span>
-                <span>{Products.role as string}</span>
+                <span>{Products.productStatus as string}</span>
               </div>
             ))}
           </div>

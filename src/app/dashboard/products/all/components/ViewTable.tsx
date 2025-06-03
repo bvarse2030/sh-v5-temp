@@ -197,12 +197,12 @@ const ViewTableNextComponents: React.FC = () => {
   if (isError && error) {
     const errorMessage =
       typeof error === 'object' && 'data' in error && error.data && typeof error.data === 'object' && 'message' in error.data
-        ? (error.data as any).message
+        ? (error.data as { message: string }).message
         : 'An error occurred fetching products.';
     return <ErrorMessageComponent message={errorMessage} />;
   }
   if (!isLoading && allProductsData.length === 0 && queryPramsQ) {
-    return <div className="py-12 text-center text-xl text-slate-500">No products found for your search: "{queryPramsQ}".</div>;
+    return <div className="py-12 text-center text-xl text-slate-500">No products found for your search: `&ldquo;`{queryPramsQ}`&ldquo;`.</div>;
   }
   if (!isLoading && allProductsData.length === 0) {
     return <div className="py-12 text-center text-xl text-slate-500">No products available. Add some!</div>;

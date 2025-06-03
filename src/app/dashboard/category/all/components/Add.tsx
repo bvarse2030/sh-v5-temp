@@ -46,15 +46,6 @@ const AddNextComponents: React.FC = () => {
     const { name, value } = e.target;
     setNewCategory_s({ ...newCategory_s, [name]: value });
   };
-  const handleInputCancel = (value: string) => {
-    const others = subItems.filter(i => i !== value);
-    setSubItems(others);
-    const otherNeweCategory_s = {
-      ...newCategory_s,
-      subCategory: others,
-    };
-    setNewCategory_s({ ...otherNeweCategory_s });
-  };
 
   const handleAddCategory_s = async () => {
     const category_s = { name: newCategory_s.name, subCategory: subItems };

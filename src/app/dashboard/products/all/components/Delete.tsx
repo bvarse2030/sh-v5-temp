@@ -11,7 +11,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { IProducts } from '../api/v1/Model';
+import { IProduct } from '../api/v1/Model';
 import { useProductsStore } from '../store/Store';
 import { baseIProducts } from '../store/StoreConstants';
 import { useDeleteProductsMutation } from '../redux/rtk-Api';
@@ -36,7 +36,7 @@ const DeleteNextComponents: React.FC = () => {
 
   const handleCancel = () => {
     toggleDeleteModal(false);
-    setSelectedProducts({ ...baseIProducts } as IProducts);
+    setSelectedProducts({ ...baseIProducts } as IProduct);
   };
 
   const { name = '' } = selectedProducts || {};
