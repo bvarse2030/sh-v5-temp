@@ -88,18 +88,7 @@ export async function getProducts(req: Request) {
   const sortBy = url.searchParams.get('sortBy') || 'updatedAt';
   const sortOrder = url.searchParams.get('sortOrder') === 'asc' ? 1 : -1;
 
-  const cacheKey = `products:page${page}:limit${limit}:q${searchQuery || ''}:cat${category || ''}:status${status || ''}:sortBy${sortBy}:sortOrder${sortOrder}`;
-
-  try {
-    await connectRedis();
-    const cachedData = await getRedisData(cacheKey);
-    if (cachedData) {
-      const { products, totalProducts } = JSON.parse(cachedData);
-      return formatResponse({ products: products || [], total: totalProducts, page, limit, source: 'cache' }, 'Products fetched successfully from cache', 200);
-    }
-  } catch (redisError) {
-    console.warn('Redis error in getProducts (cache lookup):', redisError);
-  }
+  const cacheKey = `tagTypeProducts`;
 
   return withDB(async () => {
     try {

@@ -40,7 +40,6 @@ const ViewTableNextComponents: React.FC = () => {
   const [sortConfig, setSortConfig] = useState<{ key: keyof IProduct; direction: 'asc' | 'desc' } | null>({ key: 'createdAt', direction: 'desc' });
   const {
     setSelectedProducts,
-    toggleBulkEditModal,
     toggleBulkUpdateModal,
     toggleViewModal,
     queryPramsLimit,
@@ -111,7 +110,7 @@ const ViewTableNextComponents: React.FC = () => {
   }, [allProductsData, sortConfig]);
 
   const handleSelectAll = (isChecked: boolean) => {
-    setBulkData(isChecked ? sortedProductsData.map((p: IProduct) => p._id.toString()) : []);
+    setBulkData(isChecked ? sortedProductsData.map((p: IProduct) => p._id) : []);
   };
 
   const handleSelectRow = (isChecked: boolean, product: IProduct) => {
@@ -169,7 +168,7 @@ const ViewTableNextComponents: React.FC = () => {
 
   const renderTableRows = () =>
     sortedProductsData.map((product: IProduct) => (
-      <TableRow key={product._id.toString()}>
+      <TableRow key={product._id}>
         <TableCell>
           <Checkbox onCheckedChange={checked => handleSelectRow(!!checked, product)} checked={bulkData.includes(product)} />
         </TableCell>
